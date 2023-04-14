@@ -18,7 +18,7 @@ async function getMD(startPath, filter) {
         if (stat.isDirectory()) {
             getMD(filename, filter); 
         } else if (filename.endsWith(filter)) {
-            getMissingAlt(filename);
+            core.info(filename);
         };
     };
 };
