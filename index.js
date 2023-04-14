@@ -34,7 +34,7 @@ async function getMissingAlt(filePath){
     rl.on('line', (line) => {
         if (regex1.test(line)){
             // core.info(`line: ${line}`);
-            let imageLink = getImage(line);
+            const imageLink = getImage(line);
             core.info(imageLink);
         }
     });
@@ -45,7 +45,7 @@ async function getMissingAlt(filePath){
 
 async function getImage(line){
     const regex1 = /\((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi;
-    let imageLink = regex1.match(line);
+    const imageLink = line.match(regex1);
     if (imageLink.starsWith(https)){
         return imageLink;
     }
