@@ -1,0 +1,5 @@
+name: "Alt Suggestor"
+description: "Looks for missing inline image alt text and suggests them"
+runs: 
+  using: node16
+  main: index.js
