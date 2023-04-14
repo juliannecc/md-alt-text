@@ -1,6 +1,10 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
+const fs = require('fs');
+const readline = require('readline');
+var path = require('path');
+
 async function getMD(startPath, filter) {
     if (!fs.existsSync(startPath)) {
         core.info(`no dir ${startPath}`)
