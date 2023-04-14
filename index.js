@@ -33,22 +33,12 @@ async function getMissingAlt(filePath){
     });
     rl.on('line', (line) => {
         if (regex1.test(line)){
-            // core.info(`line: ${line}`);
-            const imageLink = getImage(line);
-            core.info(imageLink);
+            core.info(`line: ${line}`);
         }
     });
     rl.on('close', () => {
         core.info('Finished reading the file.');
     });
-};
-
-async function getImage(line){
-    const regex1 = /\((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi;
-    const imageLink = line.match(regex1);
-    if (imageLink.starsWith('https')){
-        return imageLink;
-    }
 };
 
 
