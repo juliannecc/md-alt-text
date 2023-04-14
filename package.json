@@ -19,6 +19,7 @@
   "homepage": "https://github.com/juliannecc/md-alt-text#readme",
   "dependencies": {
     "@actions/core": "^1.10.0",
-    "@actions/github": "^5.1.1"
+    "@actions/github": "^5.1.1",
+    "init": "^0.1.2"
   }
 }
