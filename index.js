@@ -18,7 +18,7 @@ async function getMD(startPath, filter) {
         if (stat.isDirectory()) {
             getMD(filename, filter); 
         } else if (filename.endsWith(filter)) {
-            core.info(filename);
+            // core.info(filename);
             getMissingAlt(filename);            
         };
     };
@@ -33,7 +33,9 @@ async function getMissingAlt(filePath){
     });
     rl.on('line', (line) => {
         if (regex1.test(line)){
-            core.info(`line: ${line}`);
+            // core.info(`line: ${line}`);
+            const imageLink = getImage(line);
+            core.info(imageLink);
         }
     });
     rl.on('close', () => {
@@ -41,12 +43,19 @@ async function getMissingAlt(filePath){
     });
 };
 
+async function getImage(line){
+    const regex1 = /\((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi;
+    const imageLink = regex1.match(line);
+    if (imageLink.starsWith(https)){
+        return imageLink;
+    }
+};
+
 
 (
     async () => {
         try {
             getMD('.', '.md')
-            core.notice('hi')
         } catch (error) {
             core.setFailed(error.message);
         }
