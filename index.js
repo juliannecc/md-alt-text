@@ -19,9 +19,28 @@ async function getMD(startPath, filter) {
             getMD(filename, filter); 
         } else if (filename.endsWith(filter)) {
             core.info(filename);
+            getMissingAlt(filename);            
         };
     };
 };
+
+async function getMissingAlt(filePath){
+    const regex1 = /!\[\]\((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi;
+    const fileStream = fs.createReadStream(filePath);
+    const rl = readline.createInterface({
+        input: fileStream,
+        crlfDelay: Infinity
+    });
+    rl.on('line', (line) => {
+        if (regex1.test(line)){
+            core.info(`line: ${line}`);
+        }
+    });
+    rl.on('close', () => {
+        core.info('Finished reading the file.');
+    });
+};
+
 
 (
     async () => {
