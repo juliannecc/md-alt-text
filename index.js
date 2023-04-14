@@ -46,7 +46,7 @@ async function getMissingAlt(filePath){
 async function getImage(line){
     const regex1 = /\((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi;
     const imageLink = line.match(regex1);
-    if (imageLink.starsWith(https)){
+    if (imageLink.starsWith('https')){
         return imageLink;
     }
 };
