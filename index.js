@@ -44,6 +44,7 @@ async function getMissingAlt(filePath){
 };
 
 
+
 (
     async () => {
         try {
@@ -52,5 +53,4 @@ async function getMissingAlt(filePath){
             core.setFailed(error.message);
         }
     }
-
 )();
