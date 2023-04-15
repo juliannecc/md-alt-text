@@ -62,7 +62,7 @@ async function getImageText(imageLink) {
         core.info(JSON.stringify(response.data));
         return;
     } catch (error) {
-        core.info(error);
+        core.warning(error);
     }
 }
 
