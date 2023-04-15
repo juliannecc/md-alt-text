@@ -56,7 +56,7 @@ function getLink(imgLink ,fPath){
     const repo = core.getInput('repo');
 
     let imageLink = toString(imgLink);
-    let filePath = toString(filePath);
+    let filePath = toString(fPath);
 
     if(imageLink.startsWith('http')){return imageLink;}
     if(imageLink.startsWith('../')){
