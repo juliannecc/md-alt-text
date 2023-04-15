@@ -45,7 +45,7 @@ async function getMissingAlt(filePath){
             const owner = core.getInput('owner');
             const token = core.getInput('token');
             const repo = core.getInput('repo');
-            const branch = core.getInput('branch');
+            const branch = core.getInput('branch').toString().match();
                 
             if(imageLink.toString().startsWith('http')){
                 getImageText(imageLink);
