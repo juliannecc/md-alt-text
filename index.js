@@ -54,24 +54,22 @@ async function getMissingAlt(filePath){
                 var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
                 for (let i = 0; i < count; i++) {
                     var newPath = newPath.replace(/\/(?:.(?!\/))+$/gim, '')
-                    var temp = /\//g;
-                    if(temp.test(newPath)){
-                        var newLink = `https://github.com/${owner}/${repo}/raw${branch}/${newImageLink}`;
-                    }
                 }
-                core.info(`${count}`)
                 var newImageLink = imageLink.toString().replace(imageLink, imageLink.toString().match(/\/(?:.(?!\/))+$/gim));
-                // var newLink = 'https://raw.githubusercontent.com/' + owner + '/' + repo + '/' + newPath + newImageLink;
-                var newLink = `https://github.com/${owner}/${repo}/raw${branch}/${newPath}${newImageLink}`
+                var temp = /\//g;
+                var newLink = '';
+                if (temp.test(newPath)){
+                    var newLink = `https://github.com/${owner}/${repo}/raw${branch}/${newPath}${newImageLink}`;
+                } else {
+                    var newLink = `https://github.com/${owner}/${repo}/raw${branch}${newImageLink}`;
+                }
                 getImageText(newLink);
             } else if(imageLink.toString().startsWith('./')){
                 var cleanLink = imageLink.toString().replace('./','');
-                // var newLink = 'https://raw.githubusercontent.com/' + owner + '/' + repo + '/' + cleanLink;
-                var newLink = `https://github.com/${owner}/${repo}/raw${branch}/${cleanLink}`
+                var newLink = `https://github.com/${owner}/${repo}/raw${branch}/${cleanLink}`;
                 getImageText(newLink);
             } else {
-                // var newLink = 'https://github.com/' + owner + '/' + repo + '/' + imageLink;
-                var newLink = `https://github.com/${owner}/${repo}/raw${branch}/${imageLink}`
+                var newLink = `https://github.com/${owner}/${repo}/raw${branch}/${imageLink}`;
                 getImageText(newLink);
             }
 
