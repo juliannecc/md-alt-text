@@ -48,7 +48,7 @@ async function getMissingAlt(filePath){
             if(imageLink.toString().startsWith('http')){
                 getImageText(imageLink);
             } else if(imageLink.toString().startsWith('../')){
-                var count = (imageLink.toString()..match(/..\//g) || []).length;
+                var count = (imageLink.toString().match(/..\//g) || []).length;
                 var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
                 for (let i = 0; i < count; i++) {
                     var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '')
