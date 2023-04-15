@@ -42,7 +42,10 @@ async function getMissingAlt(filePath){
             let l = line;
             var imageLink = l.match( /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi );
             var newLink = reformatLink(imageLink, filePath);
-            getImageText(newLink, filePath, lineno);
+            const desc = getImageText(newLink);
+            desc.then((response) => {
+                core.info(`Received response: ${response}`);
+              });
         }
     });
     rl.on('close', () => {
@@ -98,7 +101,7 @@ function reformatLink(imageLink, filePath){
 };
 
 // Calls the Image Analysis Analyze API
-async function getImageText(imageLink, filePath, lineno) {
+async function getImageText(imageLink) {
     core.info(`${imageLink}`)
     try {
         const ENDPOINT_URL = core.getInput('ENDPOINT_URL');
@@ -120,7 +123,7 @@ async function getImageText(imageLink, filePath, lineno) {
                 "Ocp-Apim-Subscription-Key": `${AZURE_KEY}`}
             });
         const result = JSON.stringify(response.data['captionResult']['text']);
-
+        // core.info(result);
         // await octokit.request(`POST /repos/${owner}/${repo}/pulls/${pull_number}/comments`, {
         //     owner: `${owner}`,
         //     repo: `${repo}`,
@@ -136,9 +139,7 @@ async function getImageText(imageLink, filePath, lineno) {
         //       'X-GitHub-Api-Version': '2022-11-28'
         //     }
         //   })
-
-        core.info(result);
-        return;
+        return result; 
     } catch (error) {
         core.warning(`Failed to get caption for image with link ${imageLink}`);
         core.warning(error);
