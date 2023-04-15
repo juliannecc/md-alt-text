@@ -59,7 +59,8 @@ async function getImageText(imageLink) {
                 {"Content-Type": "application/json",
                 "Ocp-Apim-Subscription-Key": `${AZURE_KEY}`}
             });
-        core.info(JSON.stringify(response.data)[0]);
+        // core.info(JSON.stringify(response.data)[0]);
+        core.info(JSON.parse(response).captionResult)
         return;
     } catch (error) {
         core.warning(`Failed to get caption for image with link ${imageLink}`);
