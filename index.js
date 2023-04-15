@@ -60,17 +60,17 @@ async function getMissingAlt(filePath){
                 var newLink = '';
                 // https://github.com/juliannecc/test/blob/main/pexels-photo-708440.jpeg?raw=true
                 if (temp.test(newPath)){
-                    var newLink = `https://github.com/${owner}/${repo}${branch}/${newPath}${newImageLink}?raw=true`;
+                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}${newImageLink}`;
                 } else {
-                    var newLink = `https://github.com/${owner}/${repo}${branch}${newImageLink}?raw=true`;
+                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}${newImageLink}`;
                 }
                 getImageText(newLink);
             } else if(imageLink.toString().startsWith('./')){
                 var cleanLink = imageLink.toString().replace('./','');
-                var newLink = `https://github.com/${owner}/${repo}${branch}/${cleanLink}?raw=true`;
+                var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${cleanLink}`;
                 getImageText(newLink);
             } else {
-                var newLink = `https://github.com/${owner}/${repo}${branch}/${imageLink}?raw=true`;
+                var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${imageLink}`;
                 getImageText(newLink);
             }
 
