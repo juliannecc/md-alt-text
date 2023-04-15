@@ -46,7 +46,7 @@ async function getMissingAlt(filePath){
             desc.then((response) => {
                 let result = response;
                 core.info(result);
-                // createComment(result, lineno, filePath);
+                createComment(result, lineno, filePath);
               });
         }
     });
