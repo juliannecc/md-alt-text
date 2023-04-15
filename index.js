@@ -7,6 +7,8 @@ var path = require('path');
 
 const axios = require('axios');
 
+// Finds MD files within a repository
+// https://stackoverflow.com/questions/25460574/find-files-by-extension-html-under-a-folder-in-nodejs
 async function getMD(startPath, filter) {
     if (!fs.existsSync(startPath)) {
         core.info(`no dir ${startPath}`)
@@ -26,6 +28,7 @@ async function getMD(startPath, filter) {
     };
 };
 
+// Finds missing inline image alt text
 async function getMissingAlt(filePath){
     const regex1 = /!\[\]\((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi;
     const fileStream = fs.createReadStream(filePath);
@@ -46,15 +49,30 @@ async function getMissingAlt(filePath){
     });
 };
 
-function getLink(imageLink){
+// Reformats the link given
+function getLink(imageLink ,filePath){
     const owner = core.getInput('owner');
     const repo = core.getInput('repo');
 
     if(imageLink.startsWith('http')){return imageLink;}
     if(imageLink.startsWith('../')){
-        const newLink = 'https://github.com/' + owner + '/' + repo + '/'
+        var count = (imageLink.match(/..\//g) || []).length;
+        var newLink = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
+        for (let i = 0; i < count; i++) {
+            var newLink = filePath.replace(/\/(?:.(?!\/))+$/gim, '')
+        }
+        const newImageLink = imageLink.replace(imageLink,/\/(?:.(?!\/))+$/gim);
+        const newLink = 'https://github.com/' + owner + '/' + repo + '/' + newLink + newImageLink;
+        return newLink
     }
-
+    
+    if(imageLink.startsWith('./')){
+        const cleanLink = imageLink.replace('./','');
+        const newLink = 'https://github.com/' + owner + '/' + repo + '/' + cleanLink;
+        return newLink;
+    }
+    const newLink = 'https://github.com/' + owner + '/' + repo + '/' + imageLink;
+    return newLink;
 };
 
 async function getImageText(imageLink) {
