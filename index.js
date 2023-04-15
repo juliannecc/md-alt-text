@@ -84,7 +84,6 @@ async function getImageText(imageLink) {
 (
     async () => {
         try {
-            core.warning('test')
             getMD('.', '.md')
         } catch (error) {
             core.setFailed(error.message);
