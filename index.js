@@ -37,7 +37,7 @@ async function getMissingAlt(filePath){
         if (regex1.test(line)){
             let l = line;
             var imageLink = l.match( /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi );
-            core.info(`line: ${imageLink}`);
+            // core.info(`line: ${imageLink}`);
             getImageText(imageLink);
         }
     });
@@ -47,13 +47,14 @@ async function getMissingAlt(filePath){
 };
 
 async function getImageText(imageLink) {
+    core.info(`${imageLink}`)
     try {
         const ENDPOINT_URL = core.getInput('ENDPOINT_URL');
         const AZURE_KEY = core.getInput('AZURE_KEY');
 
         const response = await axios.post(
             `${ENDPOINT_URL}computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=caption&language=en`, 
-            { url: ''+ imageLink}, 
+            { url: `${imageLink}`}, 
             { headers:
                 {"Content-Type": "application/json",
                 "Ocp-Apim-Subscription-Key": `${AZURE_KEY}`}
