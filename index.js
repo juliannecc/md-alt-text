@@ -41,7 +41,7 @@ async function getMissingAlt(filePath){
             let l = line;
             var imageLink = l.match( /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi );
             // core.info(`line: ${imageLink}`);
-            const newImageLink = getLink(imageLink,filePath);
+            let newImageLink = getLink(imageLink,filePath);
             getImageText(newImageLink);
         }
     });
@@ -62,17 +62,17 @@ function getLink(imageLink ,filePath){
         for (let i = 0; i < count; i++) {
             var newLink = filePath.replace(/\/(?:.(?!\/))+$/gim, '')
         }
-        const newImageLink = imageLink.replace(imageLink,/\/(?:.(?!\/))+$/gim);
-        const newLink = 'https://github.com/' + owner + '/' + repo + '/' + newLink + newImageLink;
+        let newImageLink = imageLink.replace(imageLink,/\/(?:.(?!\/))+$/gim);
+        let newLink = 'https://github.com/' + owner + '/' + repo + '/' + newLink + newImageLink;
         return newLink
     }
     
     if(imageLink.startsWith('./')){
-        const cleanLink = imageLink.replace('./','');
-        const newLink = 'https://github.com/' + owner + '/' + repo + '/' + cleanLink;
+        let cleanLink = imageLink.replace('./','');
+        let newLink = 'https://github.com/' + owner + '/' + repo + '/' + cleanLink;
         return newLink;
     }
-    const newLink = 'https://github.com/' + owner + '/' + repo + '/' + imageLink;
+    let newLink = 'https://github.com/' + owner + '/' + repo + '/' + imageLink;
     return newLink;
 };
 
