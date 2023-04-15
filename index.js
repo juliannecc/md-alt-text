@@ -46,8 +46,6 @@ async function getMissingAlt(filePath){
             const token = core.getInput('token');
             const repo = core.getInput('repo');
             const branch = core.getInput('branch');
-            // .toString().match(/\/(?:.(?!\/))+$/gim);
-            core.info(branch)
                 
             if(imageLink.toString().startsWith('http')){
                 getImageText(imageLink);
