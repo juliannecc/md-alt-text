@@ -55,7 +55,7 @@ async function getMissingAlt(filePath){
                 for (let i = 0; i < count; i++) {
                     var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '')
                 }
-                core.info(`${newPath}`)
+                core.info(`${count}`)
                 var newImageLink = imageLink.toString().replace(imageLink, imageLink.toString().match(/\/(?:.(?!\/))+$/gim));
                 // var newLink = 'https://raw.githubusercontent.com/' + owner + '/' + repo + '/' + newPath + newImageLink;
                 var newLink = `https://github.com/${owner}/${repo}/raw${branch}/${newPath}${newImageLink}`
