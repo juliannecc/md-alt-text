@@ -14,6 +14,12 @@ inputs:
   token:
     description: "GitHub Token"
     required: true
+  pull_number:
+    description: "Pull Request Number"
+    required: true
+  commit_id:
+    description: "Commit ID"
+    required: true
   ENDPOINT_URL:
     description: "Azure Endpoint Url"
     required: true
