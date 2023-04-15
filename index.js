@@ -43,7 +43,6 @@ async function getMissingAlt(filePath){
             var imageLink = l.match( /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi );
             var newLink = reformatLink(imageLink, filePath);
             const desc = getImageText(newLink);
-            core.info(desc);
         }
     });
     rl.on('close', () => {
@@ -111,7 +110,7 @@ async function getImageText(imageLink) {
                 "Ocp-Apim-Subscription-Key": `${AZURE_KEY}`}
             });
         const result = JSON.stringify(response.data['captionResult']['text']);
-        // core.info(result);
+        core.info(result);
         return result;
     } catch (error) {
         core.warning(`Failed to get caption for image with link ${imageLink}`);
