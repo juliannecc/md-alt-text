@@ -1,0 +1,26 @@
+{
+  "name": "md-alt-text",
+  "version": "1.0.0",
+  "description": "Looks for missing inline image alt text and suggests them",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juliannecc/md-alt-text.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/juliannecc/md-alt-text/issues"
+  },
+  "homepage": "https://github.com/juliannecc/md-alt-text#readme",
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1",
+    "axios": "^1.3.5",
+    "init": "^0.1.2"
+  }
+}
