@@ -44,9 +44,18 @@ async function getMissingAlt(filePath){
     });
 };
 
-async function getImageText(imageLink){
-    const ENDPOINT_URL = core.getInput('ENDPOINT_URL');
-    core.info(`${ENDPOINT_URL}`)
+async function getImageText(imageLink) {
+    try {
+        const ENDPOINT_URL = core.getInput('ENDPOINT_URL');
+        const AZURE_KEY = core.getInput('AZURE_KEY');
+
+        const response = await axios.post(`${ENDPOINT_URL}computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=Description&language=en`, 
+                                            {url: `${imageLink}`}, {headers:`Ocp-Apim-Subscription-Key: ${AZURE_KEY}`}
+                                             );
+        core.info(response);
+    } catch (error) {
+        core.info(error);
+    }
 };
 
 (

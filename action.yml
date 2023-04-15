@@ -4,6 +4,9 @@ inputs:
   ENDPOINT_URL:
     description: "Endpoint url"
     required: true
+  AZURE_KEY:
+    description: "Azure key"
+    required: true
 runs: 
   using: node16
   main: index.js
