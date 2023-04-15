@@ -7,6 +7,7 @@ var path = require('path');
 
 const axios = require('axios');
 
+
 // Finds MD files within a repository
 // https://stackoverflow.com/questions/25460574/find-files-by-extension-html-under-a-folder-in-nodejs
 async function getMD(startPath, filter) {
@@ -130,10 +131,11 @@ async function createComment(result, lineno, filePath){
     const repo = core.getInput('repo');
     const pull_number = core.getInput('pull_number');
     const commit_id = core.getInput('commit_id')
-
+    
+    const { request } = require("@octokit/request");
     const octokit = new github.getOctokit(token);    
     
-    await octokit.rest.request(`POST /repos/${owner}/${repo}/pulls/${pull_number}/comments`, {
+    await octokit.request(`POST /repos/${owner}/${repo}/pulls/${pull_number}/comments`, {
         owner: `${owner}`,
         repo: `${repo}`,
         pull_number: `${pull_number}`,
