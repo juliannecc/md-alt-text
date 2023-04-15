@@ -80,9 +80,9 @@ async function getMissingAlt(filePath){
                 var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
                 var newLink = '';
                 if (newPath.endsWith('.md')){
-                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${cleanLink}`;
+                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${imageLink}`;
                 } else{
-                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}/${cleanLink}`;
+                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}/${imageLink}`;
                 }
                 getImageText(newLink);
             }
