@@ -46,18 +46,20 @@ async function getMissingAlt(filePath){
     });
 };
 
-async function getImageText(imageLink) {
-    try {
-        const ENDPOINT_URL = core.getInput('ENDPOINT_URL');
-        const AZURE_KEY = core.getInput('AZURE_KEY');
-
-        const response = await axios.post(`${ENDPOINT_URL}computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=caption&language=en`, 
-                                            {url: `https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png`}, {headers:`Ocp-Apim-Subscription-Key: ${AZURE_KEY}`}
-                                             );
-        core.info(response);
-    } catch (error) {
-        core.info(error);
-    }
+async function getImageText(imageLink) {   
+    const sendPostRequest = async () => {
+        try {
+            const ENDPOINT_URL = core.getInput('ENDPOINT_URL');
+            const AZURE_KEY = core.getInput('AZURE_KEY');
+            const resp = await axios.post(`${ENDPOINT_URL}computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=caption&language=en`, 
+            {url: `https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png`}, {headers:`Ocp-Apim-Subscription-Key: ${AZURE_KEY}`}
+             );
+            core.info(resp.data);
+        } catch (err) {
+            // Handle Error Here
+            core.info(err);
+        }
+    };
 };
 
 (
