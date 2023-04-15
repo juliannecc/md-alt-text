@@ -53,7 +53,7 @@ async function getImageText(imageLink) {
 
         const response = await axios.post(
             `${ENDPOINT_URL}computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=caption&language=en`, 
-            { url: `${imageLink}`}, 
+            { url: ''+ imageLink}, 
             { headers:
                 {"Content-Type": "application/json",
                 "Ocp-Apim-Subscription-Key": `${AZURE_KEY}`}
