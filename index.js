@@ -53,11 +53,11 @@ async function getMissingAlt(filePath){
                 for (let i = 0; i < count; i++) {
                     var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '')
                 }
-                var newImageLink = imageLink.replace(imageLink,/\/(?:.(?!\/))+$/gim);
+                var newImageLink = imageLink.toString().replace(imageLink,/\/(?:.(?!\/))+$/gim);
                 var newLink = 'https://github.com/' + owner + '/' + repo + '/' + newPath + newImageLink;
                 getImageText(newLink);
             } else if(imageLink.toString().startsWith('./')){
-                var cleanLink = imageLink.replace('./','');
+                var cleanLink = imageLink.toString().replace('./','');
                 var newLink = 'https://github.com/' + owner + '/' + repo + '/' + cleanLink;
                 getImageText(newLink);
             } else {
