@@ -60,6 +60,7 @@ async function getImageText(imageLink) {
             core.info(err);
         }
     };
+    sendPostRequest();
 };
 
 (
