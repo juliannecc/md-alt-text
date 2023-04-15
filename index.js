@@ -54,7 +54,7 @@ async function getImageText(imageLink) {
             const resp = await axios.post(`${ENDPOINT_URL}computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=caption&language=en`, 
             {url: `https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png`}, {headers:{"Content-Type": "application/json" ,"Ocp-Apim-Subscription-Key": `${AZURE_KEY}`}}
              );
-            core.info(resp.data);
+            core.info(JSON.stringify(resp.data));
         } catch (err) {
             // Handle Error Here
             core.info(err);
