@@ -36,6 +36,7 @@ async function getMissingAlt(filePath){
             let l = line;
             var imageLink = l.match( /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi );
             core.info(`line: ${imageLink}`);
+            getImageText(imageLink);
         }
     });
     rl.on('close', () => {
@@ -43,7 +44,9 @@ async function getMissingAlt(filePath){
     });
 };
 
-
+async function getImageText(imageLink){
+    
+};
 
 (
     async () => {
