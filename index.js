@@ -55,6 +55,8 @@ function getLink(imageLink ,filePath){
     const owner = core.getInput('owner');
     const repo = core.getInput('repo');
 
+    let imageLink = imageLink; 
+
     if(imageLink.startsWith('http')){return imageLink;}
     if(imageLink.startsWith('../')){
         var count = (imageLink.match(/..\//g) || []).length;
