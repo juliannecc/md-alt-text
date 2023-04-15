@@ -44,7 +44,9 @@ async function getMissingAlt(filePath){
             var newLink = reformatLink(imageLink, filePath);
             const desc = getImageText(newLink);
             desc.then((response) => {
-                core.info(`Received response: ${response}`);
+                let result = response;
+                core.info(result);
+                // createComment(result, lineno, filePath);
               });
         }
     });
@@ -107,14 +109,6 @@ async function getImageText(imageLink) {
         const ENDPOINT_URL = core.getInput('ENDPOINT_URL');
         const AZURE_KEY = core.getInput('AZURE_KEY');
         
-        const token = core.getInput('token');
-        const owner = core.getInput('owner');
-        const repo = core.getInput('repo');
-        const pull_number = core.getInput('pull_number');
-        const commit_id = core.getInput('commit_id')
-
-        const octokit = new github.getOctokit(token);
-
         const response = await axios.post(
             `${ENDPOINT_URL}computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=caption&language=en`, 
             { url: `${imageLink}`}, 
@@ -123,28 +117,37 @@ async function getImageText(imageLink) {
                 "Ocp-Apim-Subscription-Key": `${AZURE_KEY}`}
             });
         const result = JSON.stringify(response.data['captionResult']['text']);
-        // core.info(result);
-        // await octokit.request(`POST /repos/${owner}/${repo}/pulls/${pull_number}/comments`, {
-        //     owner: `${owner}`,
-        //     repo: `${repo}`,
-        //     pull_number: `${pull_number}`,
-        //     body: 'Great stuff!',
-        //     commit_id: `${commit_id}`,
-        //     path: `${filePath}`,
-        //     start_line: 1,
-        //     start_side: 'RIGHT',
-        //     line: `${lineno}`,
-        //     side: 'RIGHT',
-        //     headers: {
-        //       'X-GitHub-Api-Version': '2022-11-28'
-        //     }
-        //   })
         return result; 
     } catch (error) {
         core.warning(`Failed to get caption for image with link ${imageLink}`);
         core.warning(error);
     }
-}
+};
+
+async function createComment(result, lineno, filePath){
+    const token = core.getInput('token');
+    const owner = core.getInput('owner');
+    const repo = core.getInput('repo');
+    const pull_number = core.getInput('pull_number');
+    const commit_id = core.getInput('commit_id')
+
+    const octokit = new github.getOctokit(token);    await octokit.request(`POST /repos/${owner}/${repo}/pulls/${pull_number}/comments`, {
+        owner: `${owner}`,
+        repo: `${repo}`,
+        pull_number: `${pull_number}`,
+        body: `${result}`,
+        commit_id: `${commit_id}`,
+        path: `${filePath}`,
+        start_line: 1,
+        start_side: 'RIGHT',
+        line: `${lineno}`,
+        side: 'RIGHT',
+        headers: {
+            'X-GitHub-Api-Version': '2022-11-28'
+        }
+        })
+};
+
 
 (
     async () => {
