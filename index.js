@@ -52,7 +52,7 @@ async function getImageText(imageLink) {
         const AZURE_KEY = core.getInput('AZURE_KEY');
 
         const response = await axios.post(`${ENDPOINT_URL}computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=caption&language=en`, 
-                                            {url: `${imageLink}`}, {headers:`Ocp-Apim-Subscription-Key: ${AZURE_KEY}`}
+                                            {url: `https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png`}, {headers:`Ocp-Apim-Subscription-Key: ${AZURE_KEY}`}
                                              );
         core.info(response);
     } catch (error) {
