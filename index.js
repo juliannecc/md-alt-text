@@ -41,8 +41,30 @@ async function getMissingAlt(filePath){
             let l = line;
             var imageLink = l.match( /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi );
             // core.info(`line: ${imageLink}`);
-            let newImageLink = getLink(imageLink,filePath);
-            getImageText(newImageLink);
+
+            const owner = core.getInput('owner');
+            const repo = core.getInput('repo');
+
+            if(imageLink.startsWith('http')){
+                getImageText(imageLink);
+            } else if(imageLink.startsWith('../')){
+                var count = (imageLink.match(/..\//g) || []).length;
+                var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
+                for (let i = 0; i < count; i++) {
+                    var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '')
+                }
+                var newImageLink = imageLink.replace(imageLink,/\/(?:.(?!\/))+$/gim);
+                var newLink = 'https://github.com/' + owner + '/' + repo + '/' + newPath + newImageLink;
+                getImageText(newLink);
+            } else if(imageLink.startsWith('./')){
+                var cleanLink = imageLink.replace('./','');
+                var newLink = 'https://github.com/' + owner + '/' + repo + '/' + cleanLink;
+                getImageText(newLink);
+            } else {
+                var newLink = 'https://github.com/' + owner + '/' + repo + '/' + imageLink;
+                getImageText(newLink);
+            }
+
         }
     });
     rl.on('close', () => {
@@ -50,34 +72,34 @@ async function getMissingAlt(filePath){
     });
 };
 
-// Reformats the link given
-function getLink(imgLink ,fPath){
-    const owner = core.getInput('owner');
-    const repo = core.getInput('repo');
+// // Reformats the link given
+// function getLink(imgLink ,fPath){
+//     const owner = core.getInput('owner');
+//     const repo = core.getInput('repo');
 
-    let imageLink = toString(imgLink);
-    let filePath = toString(fPath);
+//     let imageLink = toString(imgLink);
+//     let filePath = toString(fPath);
 
-    if(imageLink.startsWith('http')){return imageLink;}
-    if(imageLink.startsWith('../')){
-        var count = (imageLink.match(/..\//g) || []).length;
-        var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
-        for (let i = 0; i < count; i++) {
-            var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '')
-        }
-        var newImageLink = imageLink.replace(imageLink,/\/(?:.(?!\/))+$/gim);
-        var newLink = 'https://github.com/' + owner + '/' + repo + '/' + newPath + newImageLink;
-        return newLink
-    }
-    
-    if(imageLink.startsWith('./')){
-        var cleanLink = imageLink.replace('./','');
-        var newLink = 'https://github.com/' + owner + '/' + repo + '/' + cleanLink;
-        return newLink;
-    }
-    var newLink = 'https://github.com/' + owner + '/' + repo + '/' + imageLink;
-    return newLink;
-};
+//     if(imageLink.startsWith('http')){return imageLink;}
+//     if(imageLink.startsWith('../')){
+//         var count = (imageLink.match(/..\//g) || []).length;
+//         var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
+//         for (let i = 0; i < count; i++) {
+//             var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '')
+//         }
+//         var newImageLink = imageLink.replace(imageLink,/\/(?:.(?!\/))+$/gim);
+//         var newLink = 'https://github.com/' + owner + '/' + repo + '/' + newPath + newImageLink;
+//         return newLink
+//     }
+//    
+//     if(imageLink.startsWith('./')){
+//         var cleanLink = imageLink.replace('./','');
+//         var newLink = 'https://github.com/' + owner + '/' + repo + '/' + cleanLink;
+//         return newLink;
+//     }
+//     var newLink = 'https://github.com/' + owner + '/' + repo + '/' + imageLink;
+//     return newLink;
+// };
 
 async function getImageText(imageLink) {
     core.info(`${imageLink}`)
