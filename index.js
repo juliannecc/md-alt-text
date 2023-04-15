@@ -58,18 +58,19 @@ async function getMissingAlt(filePath){
                 var newImageLink = imageLink.toString().replace(imageLink, imageLink.toString().match(/\/(?:.(?!\/))+$/gim));
                 var temp = /\//g;
                 var newLink = '';
+                // https://github.com/juliannecc/test/blob/main/pexels-photo-708440.jpeg?raw=true
                 if (temp.test(newPath)){
-                    var newLink = `https://github.com/${owner}/${repo}/blob${branch}/${newPath}${newImageLink}?raw=true`;
+                    var newLink = `https://github.com/${owner}/${repo}${branch}/${newPath}${newImageLink}?raw=true`;
                 } else {
-                    var newLink = `https://github.com/${owner}/${repo}/blob${branch}${newImageLink}?raw=true`;
+                    var newLink = `https://github.com/${owner}/${repo}${branch}${newImageLink}?raw=true`;
                 }
                 getImageText(newLink);
             } else if(imageLink.toString().startsWith('./')){
                 var cleanLink = imageLink.toString().replace('./','');
-                var newLink = `https://github.com/${owner}/${repo}/blob${branch}/${cleanLink}?raw=true`;
+                var newLink = `https://github.com/${owner}/${repo}${branch}/${cleanLink}?raw=true`;
                 getImageText(newLink);
             } else {
-                var newLink = `https://github.com/${owner}/${repo}/blob${branch}/${imageLink}?raw=true`;
+                var newLink = `https://github.com/${owner}/${repo}${branch}/${imageLink}?raw=true`;
                 getImageText(newLink);
             }
 
