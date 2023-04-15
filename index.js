@@ -121,21 +121,21 @@ async function getImageText(imageLink, filePath, lineno) {
             });
         const result = JSON.stringify(response.data['captionResult']['text']);
 
-        await octokit.request(`POST /repos/${owner}/${repo}/pulls/${pull_number}/comments`, {
-            owner: `${owner}`,
-            repo: `${repo}`,
-            pull_number: `${pull_number}`,
-            body: 'Great stuff!',
-            commit_id: `${commit_id}`,
-            path: `${filePath}`,
-            start_line: 1,
-            start_side: 'RIGHT',
-            line: `${lineno}`,
-            side: 'RIGHT',
-            headers: {
-              'X-GitHub-Api-Version': '2022-11-28'
-            }
-          })
+        // await octokit.request(`POST /repos/${owner}/${repo}/pulls/${pull_number}/comments`, {
+        //     owner: `${owner}`,
+        //     repo: `${repo}`,
+        //     pull_number: `${pull_number}`,
+        //     body: 'Great stuff!',
+        //     commit_id: `${commit_id}`,
+        //     path: `${filePath}`,
+        //     start_line: 1,
+        //     start_side: 'RIGHT',
+        //     line: `${lineno}`,
+        //     side: 'RIGHT',
+        //     headers: {
+        //       'X-GitHub-Api-Version': '2022-11-28'
+        //     }
+        //   })
 
         core.info(result);
         return;
