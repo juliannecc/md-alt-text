@@ -22,7 +22,7 @@ async function getMD(startPath, filter) {
         if (stat.isDirectory()) {
             getMD(filename, filter); 
         } else if (filename.endsWith(filter)) {
-            core.info(filename);
+            // core.info(filename);
             getMissingAlt(filename);            
         };
     };
@@ -45,7 +45,7 @@ async function getMissingAlt(filePath){
             const owner = core.getInput('owner');
             const repo = core.getInput('repo');
             const branch = core.getInput('branch').toString().match(/\/(?:.(?!\/))+$/gim);
-            core.info(`branch: ${branch}`);
+            // core.info(`branch: ${branch}`);
                 
             if(imageLink.toString().startsWith('http')){
                 getImageText(imageLink);
