@@ -58,12 +58,12 @@ function getLink(imageLink ,filePath){
     if(imageLink.startsWith('http')){return imageLink;}
     if(imageLink.startsWith('../')){
         var count = (imageLink.match(/..\//g) || []).length;
-        var newLink = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
+        var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
         for (let i = 0; i < count; i++) {
-            var newLink = filePath.replace(/\/(?:.(?!\/))+$/gim, '')
+            var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '')
         }
         let newImageLink = imageLink.replace(imageLink,/\/(?:.(?!\/))+$/gim);
-        let newLink = 'https://github.com/' + owner + '/' + repo + '/' + newLink + newImageLink;
+        let newLink = 'https://github.com/' + owner + '/' + repo + '/' + newPath + newImageLink;
         return newLink
     }
     
