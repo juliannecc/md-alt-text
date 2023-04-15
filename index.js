@@ -51,12 +51,9 @@ async function getMissingAlt(filePath){
 };
 
 // Reformats the link given
-function getLink(imgLink ,fPath){
+function getLink(imageLink ,filePath){
     const owner = core.getInput('owner');
     const repo = core.getInput('repo');
-
-    let imageLink =  toString(imgLink);
-    let filePath = toString(fPath);
 
     if(imageLink.startsWith('http')){return imageLink;}
     if(imageLink.startsWith('../')){
