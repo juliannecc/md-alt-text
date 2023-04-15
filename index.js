@@ -67,10 +67,23 @@ async function getMissingAlt(filePath){
                 getImageText(newLink);
             } else if(imageLink.toString().startsWith('./')){
                 var cleanLink = imageLink.toString().replace('./','');
-                var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${cleanLink}`;
+                var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
+                var newLink = '';
+                if (newPath.endsWith('.md')){
+                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${cleanLink}`;
+                } else{
+                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}/${cleanLink}`;
+                }
                 getImageText(newLink);
             } else {
                 var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${imageLink}`;
+                var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
+                var newLink = '';
+                if (newPath.endsWith('.md')){
+                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${cleanLink}`;
+                } else{
+                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}/${cleanLink}`;
+                }
                 getImageText(newLink);
             }
 
@@ -102,22 +115,6 @@ async function getImageText(imageLink) {
         core.warning(error);
     }
 }
-
-// async function getImageText(imageLink) {  
-//     const sendPostRequest = async () => {
-//         try {
-//             const ENDPOINT_URL = core.getInput('ENDPOINT_URL');
-//             const AZURE_KEY = core.getInput('AZURE_KEY');
-//             const resp = await axios.post(`${ENDPOINT_URL}computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=caption&language=en`, 
-//             {url: `https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png`}, {headers:{"Content-Type": "application/json" ,"Ocp-Apim-Subscription-Key": `${AZURE_KEY}`}}
-//              );
-//             core.info(JSON.stringify(resp.data));
-//         } catch (err) {
-//             core.info(err);
-//         }
-//     };
-//     sendPostRequest();
-// };
 
 (
     async () => {
