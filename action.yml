@@ -8,6 +8,9 @@ inputs:
   repo:
     description: "Repository Name"
     required: true
+  branch:
+    description: "Branch Name"
+    required: true
   token:
     description: "GitHub Token"
     required: true
