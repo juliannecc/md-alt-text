@@ -43,7 +43,6 @@ async function getMissingAlt(filePath){
             // core.info(`line: ${imageLink}`);
 
             const owner = core.getInput('owner');
-            const token = core.getInput('token');
             const repo = core.getInput('repo');
             const branch = core.getInput('branch').toString().match(/\/(?:.(?!\/))+$/gim);
             core.info(`branch: ${branch}`);
@@ -58,16 +57,16 @@ async function getMissingAlt(filePath){
                 }
                 var newImageLink = imageLink.toString().replace(imageLink, imageLink.toString().match(/\/(?:.(?!\/))+$/gim));
                 // var newLink = 'https://raw.githubusercontent.com/' + owner + '/' + repo + '/' + newPath + newImageLink;
-                var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}${newImageLink}?token=${token}`
+                var newLink = `https://github.com/${owner}/${repo}/raw${branch}/${newPath}${newImageLink}`
                 getImageText(newLink);
             } else if(imageLink.toString().startsWith('./')){
                 var cleanLink = imageLink.toString().replace('./','');
                 // var newLink = 'https://raw.githubusercontent.com/' + owner + '/' + repo + '/' + cleanLink;
-                var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${cleanLink}?token=${token}`
+                var newLink = `https://github.com/${owner}/${repo}/raw${branch}/${cleanLink}`
                 getImageText(newLink);
             } else {
                 // var newLink = 'https://github.com/' + owner + '/' + repo + '/' + imageLink;
-                var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${imageLink}?token=${token}`
+                var newLink = `https://github.com/${owner}/${repo}/raw${branch}/${imageLink}`
                 getImageText(newLink);
             }
 
