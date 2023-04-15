@@ -131,7 +131,9 @@ async function createComment(result, lineno, filePath){
     const pull_number = core.getInput('pull_number');
     const commit_id = core.getInput('commit_id')
 
-    const octokit = new github.getOctokit(token);    await octokit.request(`POST /repos/${owner}/${repo}/pulls/${pull_number}/comments`, {
+    const octokit = new github.getOctokit(token);    
+    
+    await octokit.rest.request(`POST /repos/${owner}/${repo}/pulls/${pull_number}/comments`, {
         owner: `${owner}`,
         repo: `${repo}`,
         pull_number: `${pull_number}`,
