@@ -45,7 +45,8 @@ async function getMissingAlt(filePath){
 };
 
 async function getImageText(imageLink){
-    
+    const ENDPOINT_URL = core.getInput('ENDPOINT_URL');
+    core.info(`${ENDPOINT_URL}`)
 };
 
 (
