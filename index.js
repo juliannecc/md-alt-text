@@ -55,6 +55,7 @@ async function getMissingAlt(filePath){
                 for (let i = 0; i < count; i++) {
                     var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '')
                 }
+                core.info(`${newPath}`)
                 var newImageLink = imageLink.toString().replace(imageLink, imageLink.toString().match(/\/(?:.(?!\/))+$/gim));
                 // var newLink = 'https://raw.githubusercontent.com/' + owner + '/' + repo + '/' + newPath + newImageLink;
                 var newLink = `https://github.com/${owner}/${repo}/raw${branch}/${newPath}${newImageLink}`
@@ -76,35 +77,6 @@ async function getMissingAlt(filePath){
         core.info('Finished reading the file.');
     });
 };
-
-// // Reformats the link given
-// function getLink(imgLink ,fPath){
-//     const owner = core.getInput('owner');
-//     const repo = core.getInput('repo');
-
-//     let imageLink = toString(imgLink);
-//     let filePath = toString(fPath);
-
-//     if(imageLink.startsWith('http')){return imageLink;}
-//     if(imageLink.startsWith('../')){
-//         var count = (imageLink.match(/..\//g) || []).length;
-//         var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
-//         for (let i = 0; i < count; i++) {
-//             var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '')
-//         }
-//         var newImageLink = imageLink.replace(imageLink,/\/(?:.(?!\/))+$/gim);
-//         var newLink = 'https://github.com/' + owner + '/' + repo + '/' + newPath + newImageLink;
-//         return newLink
-//     }
-//    
-//     if(imageLink.startsWith('./')){
-//         var cleanLink = imageLink.replace('./','');
-//         var newLink = 'https://github.com/' + owner + '/' + repo + '/' + cleanLink;
-//         return newLink;
-//     }
-//     var newLink = 'https://github.com/' + owner + '/' + repo + '/' + imageLink;
-//     return newLink;
-// };
 
 async function getImageText(imageLink) {
     core.info(`${imageLink}`)
