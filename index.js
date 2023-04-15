@@ -36,6 +36,7 @@ async function getMissingAlt(filePath){
         input: fileStream,
         crlfDelay: Infinity
     });
+    const line_counter = ((i = 0) => () => ++i)();
     rl.on('line', (line, lineno = line_counter()) => {
         if (regex1.test(line)){
             let l = line;
