@@ -36,62 +36,64 @@ async function getMissingAlt(filePath){
         input: fileStream,
         crlfDelay: Infinity
     });
-    rl.on('line', (line) => {
+    rl.on('line', (line, lineno = line_counter()) => {
         if (regex1.test(line)){
             let l = line;
             var imageLink = l.match( /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi );
-            // core.info(`line: ${imageLink}`);
-
-            const owner = core.getInput('owner');
-            const repo = core.getInput('repo');
-            const branch = core.getInput('branch').toString().match(/\/(?:.(?!\/))+$/gim);
-            // core.info(`branch: ${branch}`);
-                
-            if(imageLink.toString().startsWith('http')){
-                getImageText(imageLink);
-            } else if(imageLink.toString().startsWith('../')){
-                var count = (imageLink.toString().match(/..\//g) || []).length;
-                var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
-                for (let i = 0; i < count; i++) {
-                    var newPath = newPath.replace(/\/(?:.(?!\/))+$/gim, '')
-                }
-                var newImageLink = imageLink.toString().replace(imageLink, imageLink.toString().match(/\/(?:.(?!\/))+$/gim));
-                var temp = /\//g;
-                var newLink = '';
-                // https://github.com/juliannecc/test/blob/main/pexels-photo-708440.jpeg?raw=true
-                if (temp.test(newPath)){
-                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}${newImageLink}`;
-                } else {
-                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}${newImageLink}`;
-                }
-                getImageText(newLink);
-            } else if(imageLink.toString().startsWith('./')){
-                var cleanLink = imageLink.toString().replace('./','');
-                var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
-                var newLink = '';
-                if (newPath.endsWith('.md')){
-                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${cleanLink}`;
-                } else{
-                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}/${cleanLink}`;
-                }
-                getImageText(newLink);
-            } else {
-                var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${imageLink}`;
-                var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
-                var newLink = '';
-                if (newPath.endsWith('.md')){
-                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${imageLink}`;
-                } else{
-                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}/${imageLink}`;
-                }
-                getImageText(newLink);
-            }
-
+            var newLink = reformatLink(imageLink, filePath);
+            const desc = getImageText(newLink);
+            core.info(desc);
         }
     });
     rl.on('close', () => {
         core.info('Finished reading the file.');
     });
+};
+
+function reformatLink(imageLink, filePath){
+    const owner = core.getInput('owner');
+    const repo = core.getInput('repo');
+    const branch = core.getInput('branch').toString().match(/\/(?:.(?!\/))+$/gim);
+    // core.info(`branch: ${branch}`);
+        
+    if(imageLink.toString().startsWith('http')){
+        return imageLink;
+    } else if(imageLink.toString().startsWith('../')){
+        var count = (imageLink.toString().match(/..\//g) || []).length;
+        var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
+        for (let i = 0; i < count; i++) {
+            var newPath = newPath.replace(/\/(?:.(?!\/))+$/gim, '')
+        }
+        var newImageLink = imageLink.toString().replace(imageLink, imageLink.toString().match(/\/(?:.(?!\/))+$/gim));
+        var temp = /\//g;
+        var newLink = '';
+        if (temp.test(newPath)){
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}${newImageLink}`;
+        } else {
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}${newImageLink}`;
+        }
+        return newLink;
+    } else if(imageLink.toString().startsWith('./')){
+        var cleanLink = imageLink.toString().replace('./','');
+        var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
+        var newLink = '';
+        if (newPath.endsWith('.md')){
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${cleanLink}`;
+        } else{
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}/${cleanLink}`;
+        }
+        return newLink;
+    } else {
+        var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${imageLink}`;
+        var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
+        var newLink = '';
+        if (newPath.endsWith('.md')){
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${imageLink}`;
+        } else{
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}/${imageLink}`;
+        }
+        return newLink;
+    }
 };
 
 async function getImageText(imageLink) {
