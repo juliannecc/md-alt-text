@@ -59,17 +59,17 @@ async function getMissingAlt(filePath){
                 var temp = /\//g;
                 var newLink = '';
                 if (temp.test(newPath)){
-                    var newLink = `https://github.com/${owner}/${repo}/raw${branch}/${newPath}${newImageLink}`;
+                    var newLink = `https://github.com/${owner}/${repo}/blob${branch}/${newPath}${newImageLink}?raw=true`;
                 } else {
-                    var newLink = `https://github.com/${owner}/${repo}/raw${branch}${newImageLink}`;
+                    var newLink = `https://github.com/${owner}/${repo}/blob${branch}${newImageLink}?raw=true`;
                 }
                 getImageText(newLink);
             } else if(imageLink.toString().startsWith('./')){
                 var cleanLink = imageLink.toString().replace('./','');
-                var newLink = `https://github.com/${owner}/${repo}/raw${branch}/${cleanLink}`;
+                var newLink = `https://github.com/${owner}/${repo}/blob${branch}/${cleanLink}?raw=true`;
                 getImageText(newLink);
             } else {
-                var newLink = `https://github.com/${owner}/${repo}/raw${branch}/${imageLink}`;
+                var newLink = `https://github.com/${owner}/${repo}/blob${branch}/${imageLink}?raw=true`;
                 getImageText(newLink);
             }
 
