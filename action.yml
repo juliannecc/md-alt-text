@@ -1,12 +1,23 @@
 name: "Alt Suggestor"
 description: "Looks for missing inline image alt text and suggests them"
+
 inputs:
+  owner: 
+    description: "Repository Owner"
+    required: true
+  repo:
+    description: "Repository Name"
+    required: true
+  token:
+    description: "GitHub Token"
+    required: true
   ENDPOINT_URL:
-    description: "Endpoint url"
+    description: "Azure Endpoint Url"
     required: true
   AZURE_KEY:
     description: "Azure key"
-    required: true
+    required: true  
+
 runs: 
   using: node16
   main: index.js

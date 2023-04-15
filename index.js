@@ -20,7 +20,7 @@ async function getMD(startPath, filter) {
         if (stat.isDirectory()) {
             getMD(filename, filter); 
         } else if (filename.endsWith(filter)) {
-            // core.info(filename);
+            core.info(filename);
             getMissingAlt(filename);            
         };
     };
@@ -44,6 +44,17 @@ async function getMissingAlt(filePath){
     rl.on('close', () => {
         core.info('Finished reading the file.');
     });
+};
+
+function getLink(imageLink){
+    const owner = core.getInput('owner');
+    const repo = core.getInput('repo');
+
+    if(imageLink.startsWith('http')){return imageLink;}
+    if(imageLink.startsWith('../')){
+        const newLink = 'https://github.com/' + owner + '/' + repo + '/'
+    }
+
 };
 
 async function getImageText(imageLink) {
