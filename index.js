@@ -5,8 +5,14 @@ const fs = require('fs');
 const readline = require('readline');
 var path = require('path');
 
-const axios = require('axios');
+const token = core.getInput('token');
+const owner = core.getInput('owner');
+const repo = core.getInput('repo');
+const pull_number = core.getInput('pull_number');
+const commit_id = core.getInput('commit_id');
 
+const axios = require('axios');
+const octokit = github.getOctokit(token);
 
 // Finds MD files within a repository
 // https://stackoverflow.com/questions/25460574/find-files-by-extension-html-under-a-folder-in-nodejs
@@ -47,7 +53,7 @@ async function getMissingAlt(filePath){
             desc.then((response) => {
                 let result = response;
                 core.info(result);
-                createComment(result, lineno, filePath);
+                modifyFiles(result, lineno, filePath, imageLink);
               });
         }
     });
@@ -125,45 +131,28 @@ async function getImageText(imageLink) {
     }
 };
 
-async function createComment(result, lineno, filePath){
-    const token = core.getInput('token');
-    const owner = core.getInput('owner');
-    const repo = core.getInput('repo');
-    const pull_number = core.getInput('pull_number');
-    const commit_id = core.getInput('commit_id');
+function updateLine(content, imageLink, result) {
+	return content.replace(
+	`![](${imageLink}`,
+	`![${result}](${imageLink}`
+	);
+}
 
-    // const octokit = github.getOctokit(token);
-    // try {
-    //     await octokit.rest.pulls.createReviewComment({
-    //         owner: `${owner}`,
-    //         repo: `${repo}`,
-    //         pull_number: `${pull_number}`,
-    //         body: "Some comment",
-    //         commit_id: `${commit_id}`,
-    //         path: `${filePath}`,
-    //         line: 2, 
-    //         headers: {
-    //             'X-GitHub-Api-Version': '2022-11-28'
-    //           }
-    //     });
-    // } catch (error) {
-    //     core.setFailed(error);
-    // }
+function modifyFiles(result, lineno, filePath, imageLink){
     try {
-        await axios.post(
-            `https://api.github.com/repos/${owner}/${repo}/pulls/${pull_number}/comments`, 
-            { 
-                body: "Nice",
-                commit_id: `commit_id`,
-                path: `${filePath}`,
-                line: `${lineno}`
-            }, 
-            { headers: {
-                    "Accept": "application/vnd.github+json",
-                    "Authorization" : Bearer `${token}`,
-                    "X-GitHub-Api-Version": "2022-11-28", 
-                }
-            });
+        octokit.rest.repos.createOrUpdateFileContents({
+            'owner': `${owner}`,
+            'repo': `${owner}`,
+            'path': `${filePath}`,
+            'message': `feat: edit image alt text on ${filePath}`,
+            'content': ({content}) => {
+                return updateLine(content, imageLink, result);
+            },
+            'committer.name': 'md-alt-text-suggestor',
+            'committer.email': 'abc@def.com',
+            'author.name': 'md-alt-text-suggestor',
+            'author.email': 'abc@def.com'
+                });
     } catch (error) {
         core.setFailed(error);
     }
@@ -186,11 +175,20 @@ async function createComment(result, lineno, filePath){
     //   });
 };
 
+function createPullRequest(){
+    octokit.rest.pulls.create({
+        owner: `${owner}`,
+        repo: `${repo}`,
+        head: `feature/md-suggest-${pull_number}`,
+        base: 'main',
+      });
+};
 
 (
     async () => {
         try {
             getMD('.', '.md')
+            createPullRequest();
         } catch (error) {
             core.setFailed(error.message);
         }
