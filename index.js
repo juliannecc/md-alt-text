@@ -138,9 +138,9 @@ async function createComment(result, lineno, filePath){
         await octokit.rest.pulls.createReviewComment({
             owner: `${owner}`,
             repo: `${repo}`,
-            pull_number: `${github.context.payload.pull_request.number}`,
+            pull_number: 2,
             body: "Some comment",
-            commit_id: `${github.context.payload.pull_request.head.sha}`,
+            commit_id: `${github.event.pull_request.head.sha}`,
             path: "README.md",
             line: 2
         });
