@@ -129,10 +129,29 @@ async function createComment(result, lineno, filePath){
     const token = core.getInput('token');
     const owner = core.getInput('owner');
     const repo = core.getInput('repo');
+    const prTitle = payload.pull_request.title;
     const pull_number = core.getInput('pull_number');
     const commit_id = github.context.payload.pull_request.head.sha;
 
     const octokit = github.getOctokit(token);
+    if (prTitle === null) {
+        octokit.rest.issues.createComment({
+          ...github.context.repo,
+          issue_number: prNumber,
+          body: "PR title is missing",
+        });
+        core.setFailed("PR title is not provided");
+      }
+      // check if PR description is provided
+      if (prBody === null) {
+        octokit.rest.issues.createComment({
+          ...github.context.repo,
+          issue_number: prNumber,
+          body: "PR Description is missing",
+        });
+    
+        core.setFailed("PR Description is not provided");
+      }
 
     await octokit.rest.pulls.createReviewComment({
         owner: `${owner}`,
