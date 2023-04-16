@@ -130,6 +130,7 @@ async function createComment(result, lineno, filePath){
     const owner = core.getInput('owner');
     const repo = core.getInput('repo');
     const prTitle = github.context.payload.pull_request.title;
+    const prBody = payload.pull_request.body
     const pull_number = core.getInput('pull_number');
     const commit_id = github.context.payload.pull_request.head.sha;
 
