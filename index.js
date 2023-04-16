@@ -130,39 +130,24 @@ async function createComment(result, lineno, filePath){
     const owner = core.getInput('owner');
     const repo = core.getInput('repo');
     const prTitle = github.context.payload.pull_request.title;
-    const prBody = github.context.payload.pull_request.body;
     const pull_number = core.getInput('pull_number');
     const commit_id = github.context.payload.pull_request.head.sha;
 
     const octokit = github.getOctokit(token);
-    if (prTitle === null) {
-        octokit.rest.issues.createComment({
-          ...github.context.repo,
-          issue_number: github.context.payload.pull_request.number,
-          body: "PR title is missing",
+    try {
+        await octokit.rest.pulls.createReviewComment({
+            owner: `${owner}`,
+            repo: `${repo}`,
+            pull_number: `${github.context.payload.pull_request.number}`,
+            body: "Some comment",
+            commit_id: `${github.context.payload.pull_request.head.sha}`,
+            path: "README.md",
+            line: 2
         });
-        core.setFailed("PR title is not provided");
-      }
-      // check if PR description is provided
-      if (prBody === null) {
-        octokit.rest.issues.createComment({
-          ...github.context.repo,
-          issue_number: github.context.payload.pull_request.number,
-          body: "PR Description is missing",
-        });
-    
-        core.setFailed("PR Description is not provided");
-      }
+    } catch (error) {
+        core.setFailed(error);
+    }
 
-    await octokit.rest.pulls.createReviewComment({
-        owner: `${owner}`,
-        repo: `${repo}`,
-        pull_number: `${github.context.payload.pull_request.number}`,
-        body: "Some comment",
-        commit_id: `${github.context.payload.pull_request.head.sha}`,
-        path: "README.md",
-        line: 2,
-    });
 
     // await octokit.rest.issues.createComment({
     //     owner: `${owner}`, 
