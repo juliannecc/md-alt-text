@@ -137,7 +137,7 @@ async function createComment(result, lineno, filePath){
     if (prTitle === null) {
         octokit.rest.issues.createComment({
           ...github.context.repo,
-          issue_number: prNumber,
+          issue_number: github.context.payload.pull_request.number,
           body: "PR title is missing",
         });
         core.setFailed("PR title is not provided");
@@ -146,7 +146,7 @@ async function createComment(result, lineno, filePath){
       if (prBody === null) {
         octokit.rest.issues.createComment({
           ...github.context.repo,
-          issue_number: prNumber,
+          issue_number: github.context.payload.pull_request.number,
           body: "PR Description is missing",
         });
     
