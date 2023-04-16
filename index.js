@@ -134,6 +134,15 @@ async function createComment(result, lineno, filePath){
 
     const octokit = github.getOctokit(token);
 
+    await octokit.rest.pulls.createReviewComment({
+        ...github.context.repo,
+        pull_number: github.context.payload.pull_request.number,
+        body: "Some comment",
+        commit_id: github.context.payload.pull_request.head.sha,
+        path: "README.md",
+        line: 2,
+    });
+
     // await octokit.rest.issues.createComment({
     //     owner: `${owner}`, 
     //     repo: `${repo}`,
@@ -141,15 +150,15 @@ async function createComment(result, lineno, filePath){
     //     body: 'abc'
     //   });
 
-    await octokit.rest.pulls.createReviewComment({
-        owner: `${owner}`,
-        repo: `${repo}`,
-        pull_number: `${pull_number}`,
-        body: `${result}`,
-        commit_id: `${commit_id}`,
-        path: `${filePath}`, 
-        line: `${lineno}`
-      });
+    // await octokit.rest.pulls.createReviewComment({
+    //     owner: `${owner}`,
+    //     repo: `${repo}`,
+    //     pull_number: `${pull_number}`,
+    //     body: `${result}`,
+    //     commit_id: `${commit_id}`,
+    //     path: `${filePath}`, 
+    //     line: `${lineno}`
+    //   });
 };
 
 
