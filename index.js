@@ -132,24 +132,16 @@ async function createComment(result, lineno, filePath){
     const pull_number = core.getInput('pull_number');
     const commit_id = core.getInput('commit_id')
 
-    const { request } = require("@octokit/request");
-    const octokit = new github.getOctokit(token);    
-    
-    await octokit.request('POST /repos/{owner}/{repo}/pulls/{pull_number}/comments', {
+    const octokit = github.getOctokit(token);
+
+    await octokit.rest.pulls.createReviewComment({
         owner: `${owner}`,
         repo: `${repo}`,
         pull_number: `${pull_number}`,
         body: `${result}`,
-        commit_id: `${commit_id}`,
-        path: `${filePath}`,
-        start_line: 1,
-        start_side: 'RIGHT',
-        line: `${lineno}`,
-        side: 'RIGHT',
-        headers: {
-            'X-GitHub-Api-Version': '2022-11-28'
-        }
-        })
+        path: `${filePath}`, 
+        line: `${lineno}`
+      });
 };
 
 
