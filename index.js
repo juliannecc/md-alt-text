@@ -132,24 +132,41 @@ async function createComment(result, lineno, filePath){
     const pull_number = core.getInput('pull_number');
     const commit_id = core.getInput('commit_id');
 
-    const octokit = github.getOctokit(token);
+    // const octokit = github.getOctokit(token);
+    // try {
+    //     await octokit.rest.pulls.createReviewComment({
+    //         owner: `${owner}`,
+    //         repo: `${repo}`,
+    //         pull_number: `${pull_number}`,
+    //         body: "Some comment",
+    //         commit_id: `${commit_id}`,
+    //         path: `${filePath}`,
+    //         line: 2, 
+    //         headers: {
+    //             'X-GitHub-Api-Version': '2022-11-28'
+    //           }
+    //     });
+    // } catch (error) {
+    //     core.setFailed(error);
+    // }
     try {
-        await octokit.rest.pulls.createReviewComment({
-            owner: `${owner}`,
-            repo: `${repo}`,
-            pull_number: `${pull_number}`,
-            body: "Some comment",
-            commit_id: `${commit_id}`,
-            path: `${filePath}`,
-            line: 2, 
-            headers: {
-                'X-GitHub-Api-Version': '2022-11-28'
-              }
-        });
+        await axios.post(
+            `https://api.github.com/repos/${owner}/${repo}/pulls/${pull_number}/comments`, 
+            { 
+                body: "Nice",
+                commit_id: `commit_id`,
+                path: `${filePath}`,
+                line: `${lineno}`
+            }, 
+            { headers: {
+                    "Accept": "application/vnd.github+json",
+                    "Authorization" : Bearer `${token}`,
+                    "X-GitHub-Api-Version": "2022-11-28", 
+                }
+            });
     } catch (error) {
         core.setFailed(error);
     }
-
 
     // await octokit.rest.issues.createComment({
     //     owner: `${owner}`, 
