@@ -130,7 +130,7 @@ async function createComment(result, lineno, filePath){
     const owner = core.getInput('owner');
     const repo = core.getInput('repo');
     const pull_number = core.getInput('pull_number');
-    const commit_id = core.getInput('commit_id')
+    const commit_id = github.context.payload.pull_request.head.sha;
 
     const octokit = github.getOctokit(token);
 
@@ -140,6 +140,7 @@ async function createComment(result, lineno, filePath){
     //     issue_number: `${pull_number}`,
     //     body: 'abc'
     //   });
+
     await octokit.rest.pulls.createReviewComment({
         owner: `${owner}`,
         repo: `${repo}`,
@@ -149,14 +150,6 @@ async function createComment(result, lineno, filePath){
         path: `${filePath}`, 
         line: `${lineno}`
       });
-    // await octokit.rest.pulls.createReviewComment({
-    //     owner: `${owner}`,
-    //     repo: `${repo}`,
-    //     pull_number: `${pull_number}`,
-    //     body: `${result}`,
-    //     path: `${filePath}`, 
-    //     line: `${lineno}`
-    //   });
 };
 
 
