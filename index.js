@@ -130,6 +130,7 @@ async function createComment(result, lineno, filePath){
     const owner = core.getInput('owner');
     const repo = core.getInput('repo');
     const pull_number = core.getInput('pull_number');
+    const commit_id = github.event.pull_request.head.sha;
 
     const octokit = github.getOctokit(token);
     try {
@@ -138,7 +139,7 @@ async function createComment(result, lineno, filePath){
             repo: `${repo}`,
             pull_number: `${pull_number}`,
             body: "Some comment",
-            commit_id: `${github.sha}`,
+            commit_id: `${commit_id}`,
             path: "README.md",
             line: 2
         });
