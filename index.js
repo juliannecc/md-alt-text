@@ -175,13 +175,18 @@ function modifyFiles(result, lineno, filePath, imageLink){
     //   });
 };
 
-function createPullRequest(){
-    octokit.rest.pulls.create({
-        owner: `${owner}`,
-        repo: `${repo}`,
-        head: `feature/md-suggest-${pull_number}`,
-        base: 'main',
-      });
+async function createPullRequest(){
+    try {
+        await octokit.rest.pulls.create({
+            owner: `${owner}`,
+            repo: `${repo}`,
+            head: `feature/md-suggest-${pull_number}`,
+            base: 'main',
+          }); 
+    } catch (error) {
+        core.setFailed(error);
+    }
+
 };
 
 (
