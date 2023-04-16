@@ -180,7 +180,7 @@ async function createPullRequest(){
         await octokit.rest.pulls.create({
             owner: `${owner}`,
             repo: `${repo}`,
-            head: `feature/md-suggest-${pull_number}`,
+            head: `${owner}:feature/md-suggest-${pull_number}`,
             base: 'main',
           }); 
     } catch (error) {
