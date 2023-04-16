@@ -140,8 +140,11 @@ async function createComment(result, lineno, filePath){
             pull_number: `${pull_number}`,
             body: "Some comment",
             commit_id: `${commit_id}`,
-            path: "README.md",
-            line: 2
+            path: `${filePath}`,
+            line: 2, 
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+              }
         });
     } catch (error) {
         core.setFailed(error);
