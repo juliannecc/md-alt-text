@@ -187,8 +187,9 @@ function createPullRequest(){
 (
     async () => {
         try {
-            getMD('.', '.md')
-            createPullRequest();
+            getMD('.', '.md').then(() => {
+                createPullRequest();
+            })
         } catch (error) {
             core.setFailed(error.message);
         }
