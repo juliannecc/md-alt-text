@@ -57,8 +57,8 @@ async function getMdFiles(prFiles){
                 core.warning(JSON.stringify(response.data));
 
                 mdFiles.then((response => {
-                    core.info(typeof(mdFiles));
-                    core.info(JSON.stringify(mdFiles))
+                    core.info(typeof(response));
+                    core.info(JSON.stringify(response.data))
                 }))
                 
             })
