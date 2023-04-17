@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Call MD Alt Text Suggester
-        uses: juliannecc/md-alt-text@v1.0.0
+        uses: juliannecc/md-alt-text@v1.0.1
         with:
           lang: en
           ENDPOINT_URL: ${{ secrets.ENDPOINT_URL }}
