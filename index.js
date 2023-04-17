@@ -181,7 +181,7 @@ function getRef(){
         const headRef = octokit.rest.git.getRef({
             owner: `${owner}`,
             repo: `${repo}`,
-            ref: `https://api.github.com/repos/${owner}/${repo}/git/refs/heads`
+            ref: `https://api.github.com/repos/${owner}/${repo}/git/refs/heads/featureA`
           });
         return headRef;
     } catch (error) {
@@ -217,10 +217,6 @@ async function createPullRequest(){
         try {
             getMD('.', '.md').then(() => {
                 var refName = getRef();
-                var refName = refName.then((response) => {
-                        let result = response;
-                        core.warning(`${result}`);
-                    });
                 core.warning(`${refName}`);
             })
         } catch (error) {
