@@ -182,8 +182,8 @@ function getRef(){
         repo: `${repo}`,
         ref: `https://api.github.com/repos/${owner}/${repo}/git/refs/heads`
       });
-    core.info(JSON.stringify(headRef.data['object']['sha']))
-    return JSON.stringify(headRef.data['object']['sha'])
+    core.info(JSON.stringify(headRef.data))
+    return JSON.stringify(headRef.data)
 };
 
 async function createRef(){
