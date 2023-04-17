@@ -31,6 +31,7 @@ jobs:
       - name: Call MD Alt Text Suggester
         uses: juliannecc/md-alt-text@v1.0.0
         with:
+          lang: en
           ENDPOINT_URL: ${{ secrets.ENDPOINT_URL }}
           AZURE_KEY: ${{ secrets.AZURE_KEY }}
           owner: ${{ github.repository_owner }}
@@ -46,3 +47,29 @@ Make sure to set action secrets for `ENDPOINT_URL` and `AZURE_KEY`. To obtain th
 
 ## Output
 ![Example Output](example.png)
+
+## Notes
+The default language supported by the action is English due to the [API](https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/how-to/call-analyze-image?tabs=rest) used (which only currently supports English). However, you may choose to use Verion 3.2 of the API to get the description of the images. 
+
+#### Using Image Analysis API 3.2
+Edit line `114` of `index.js`
+Change 
+```
+        const response = await axios.post( `${ENDPOINT_URL}computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=caption&language=${lang}`, 
+
+```
+To
+```
+        const response = await axios.post( `${ENDPOINT_URL}/computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=Description&language=${lang}`, 
+
+
+```
+
+Version 3.2 supports the following languages
+| Values | Language            |
+|--------|---------------------|
+| en     | English             |
+| es     | Spanish             |
+| ja     | Japanese            |
+| pt     | Portuguese-Portugal |
+| zh     | Chinese Simplified  |
