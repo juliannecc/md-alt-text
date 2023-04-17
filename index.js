@@ -106,10 +106,6 @@ async function getMissingAltTxt(mdFiles){
                     core.info(`image link: ${response}`);
 
                     const desc = getImageText(response);
-                    desc.then((result) => {
-                        core.info(result);
-                    })
-
                 })                
                 // createComment(owner, repo, pull_number, commit_id, filePath, lineno);
             }
@@ -127,6 +123,7 @@ async function getImageText(imageLink, AZURE_KEY, ENDPOINT_URL) {
                 "Ocp-Apim-Subscription-Key": `${AZURE_KEY}`}
             });
         const result = JSON.stringify(response.data['captionResult']['text']);
+        core.info(result);
         return result; 
     } catch (error) {
         core.warning(`Failed to get caption for image with link ${imageLink}`);
