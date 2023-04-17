@@ -54,7 +54,7 @@ async function getMissingAlt(filePath){
             desc.then((response) => {
                 let result = response;
                 core.info(result);
-                modifyFiles(result, lineno, filePath, imageLink);
+                // modifyFiles(result, lineno, filePath, imageLink);
               });
         }
     });
@@ -176,9 +176,9 @@ function modifyFiles(result, lineno, filePath, imageLink){
     //   });
 };
 
-function getRef(){
+async function getRef(){
     try {
-        const headRef = octokit.rest.git.getRef({
+        const headRef = await octokit.rest.git.getRef({
             owner: `${owner}`,
             repo: `${repo}`,
             ref: `https://api.github.com/repos/${owner}/${repo}/git/refs/heads/featureA`
@@ -187,38 +187,34 @@ function getRef(){
     } catch (error) {
         core.setFailed(`${error}`)
     }
-
 };
 
-async function createRef(){
-  await octokit.rest.git.createRef({
-    owner: `${owner}`,
-    repo: `${repo}`,
-    ref: `refs/heads/feature/md-suggest-${Math.random()}`,
-    sha,
-  });  
-};
-async function createPullRequest(){
-    try {
-        await octokit.rest.pulls.create({
-            owner: `${owner}`,
-            repo: `${repo}`,
-            head: `feature/md-suggest-${pull_number}`,
-            base: 'main',
-          }); 
-    } catch (error) {
-        core.setFailed(error);
-    }
+// async function createRef(){
+//   await octokit.rest.git.createRef({
+//     owner: `${owner}`,
+//     repo: `${repo}`,
+//     ref: `refs/heads/feature/md-suggest-${Math.random()}`,
+//     sha,
+//   });  
+// };
+// async function createPullRequest(){
+//     try {
+//         await octokit.rest.pulls.create({
+//             owner: `${owner}`,
+//             repo: `${repo}`,
+//             head: `feature/md-suggest-${pull_number}`,
+//             base: 'main',
+//           }); 
+//     } catch (error) {
+//         core.setFailed(error);
+//     }
 
-};
+// };
 
 (
     async () => {
         try {
-            getMD('.', '.md').then(() => {
-                var refName = getRef();
-                core.warning(`${refName}`);
-            })
+            getMD('.', '.md');
         } catch (error) {
             core.setFailed(error.message);
         }
