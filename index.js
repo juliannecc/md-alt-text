@@ -1,105 +1,116 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-const fs = require('fs');
-const readline = require('readline');
-var path = require('path');
+const AZURE_KEY = core.getInput('AZURE_KEY');
+const ENDPOINT_URL = core.getInput('ENDPOINT_URL');
+
+const token = core.getInput('token');
+const owner = core.getInput('owner');
+const repo = core.getInput('repo');
+const pull_number = core.getInput('pull_number');
+const commit_id = core.getInput('commit_id');
+const branch = core.getInput('branch');
 
 const axios = require('axios');
+const octokit = github.getOctokit(token);
 
-// Finds MD files within a repository
-// https://stackoverflow.com/questions/25460574/find-files-by-extension-html-under-a-folder-in-nodejs
-async function getMD(startPath, filter) {
-    if (!fs.existsSync(startPath)) {
-        core.info(`no dir ${startPath}`)
-        return;
+const regexMissingAlt = /!\[\]\((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi;
+const regexImageLink = /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi;
+
+// List pull requests files 
+async function getPrFiles(owner, repo, pull_number){
+    try {
+        const prFiles = await octokit.rest.pulls.listFiles({
+            owner: `${owner}`,
+            repo: `${repo}`,
+            pull_number: `${pull_number}`,
+          });
+          return prFiles;
+    } catch (error) {
+        core.setFailed(error)
     }
-
-    var files = fs.readdirSync(startPath);
-    for (var i = 0; i < files.length; i++) {
-        var filename = path.join(startPath, files[i]);
-        var stat = fs.lstatSync(filename);
-        if (stat.isDirectory()) {
-            getMD(filename, filter); 
-        } else if (filename.endsWith(filter)) {
-            // core.info(filename);
-            getMissingAlt(filename);            
-        };
-    };
 };
 
-// Finds missing inline image alt text
-async function getMissingAlt(filePath){
-    const regex1 = /!\[\]\((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi;
-    const fileStream = fs.createReadStream(filePath);
-    const rl = readline.createInterface({
-        input: fileStream,
-        crlfDelay: Infinity
-    });
-    rl.on('line', (line) => {
-        if (regex1.test(line)){
-            let l = line;
-            var imageLink = l.match( /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi );
-            // core.info(`line: ${imageLink}`);
+// Gets md files from pull request files
+async function getMdFiles(prFiles){
+    const mdFiles = [];
 
-            const owner = core.getInput('owner');
-            const repo = core.getInput('repo');
-            const branch = core.getInput('branch').toString().match(/\/(?:.(?!\/))+$/gim);
-            // core.info(`branch: ${branch}`);
-                
-            if(imageLink.toString().startsWith('http')){
-                getImageText(imageLink);
-            } else if(imageLink.toString().startsWith('../')){
-                var count = (imageLink.toString().match(/..\//g) || []).length;
-                var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
-                for (let i = 0; i < count; i++) {
-                    var newPath = newPath.replace(/\/(?:.(?!\/))+$/gim, '')
-                }
-                var newImageLink = imageLink.toString().replace(imageLink, imageLink.toString().match(/\/(?:.(?!\/))+$/gim));
-                var temp = /\//g;
-                var newLink = '';
-                // https://github.com/juliannecc/test/blob/main/pexels-photo-708440.jpeg?raw=true
-                if (temp.test(newPath)){
-                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}${newImageLink}`;
-                } else {
-                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}${newImageLink}`;
-                }
-                getImageText(newLink);
-            } else if(imageLink.toString().startsWith('./')){
-                var cleanLink = imageLink.toString().replace('./','');
-                var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
-                var newLink = '';
-                if (newPath.endsWith('.md')){
-                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${cleanLink}`;
-                } else{
-                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}/${cleanLink}`;
-                }
-                getImageText(newLink);
-            } else {
-                var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${imageLink}`;
-                var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
-                var newLink = '';
-                if (newPath.endsWith('.md')){
-                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${imageLink}`;
-                } else{
-                    var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}/${imageLink}`;
-                }
-                getImageText(newLink);
+    prFiles.forEach(function(prFile){
+        for (let key in prFile){
+            let value = prFile[key];
+            if( key == 'filename' && /.*\.md$/i.test(value)){
+                mdFiles.push(prFile);
             }
-
         }
     });
-    rl.on('close', () => {
-        core.info('Finished reading the file.');
-    });
+
+    return mdFiles;
 };
 
-async function getImageText(imageLink) {
-    core.info(`${imageLink}`)
-    try {
-        const ENDPOINT_URL = core.getInput('ENDPOINT_URL');
-        const AZURE_KEY = core.getInput('AZURE_KEY');
+// Reformats the image link
+function reformatImageLink(imageLink, filePath){
+    if(imageLink.toString().startsWith('http')){
+        return imageLink;
+    } else if(imageLink.toString().startsWith('../')){
+        var count = (imageLink.toString().match(/..\//g) || []).length;
+        var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
+        for (let i = 0; i < count; i++) {
+            var newPath = newPath.replace(/\/(?:.(?!\/))+$/gim, '')
+        }
+        var newImageLink = imageLink.toString().replace(imageLink, imageLink.toString().match(/\/(?:.(?!\/))+$/gim));
+        var temp = /\//g;
+        var newLink = '';
+        if (temp.test(newPath)){
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${newPath}${newImageLink}`;
+        } else {
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}${newImageLink}`;
+        }
+        return newLink;
+    } else if(imageLink.toString().startsWith('./')){
+        var cleanLink = imageLink.toString().replace('./','');
+        var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
+        var newLink = '';
+        if (newPath.endsWith('.md')){
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${cleanLink}`;
+        } else{
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${newPath}/${cleanLink}`;
+        }
+        return newLink;
+    } else {
+        var newLink = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${imageLink}`;
+        var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
+        var newLink = '';
+        if (newPath.endsWith('.md')){
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${imageLink}`;
+        } else{
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${newPath}/${imageLink}`;
+        }
+        return newLink;
+    }
+}
 
+// Finds image with missing alt texts
+async function getMissingAltTxt(mdFiles){
+    core.info('getting missing alt texts');
+    for(const mdFile in mdFiles){
+        let fileContents = mdFiles[mdFile]['patch'].split('\n');
+        let filePath = mdFiles[mdFile]['filename'];
+        for(const lineno in fileContents){
+            core.info(fileContents[lineno]);
+            if(regexMissingAlt.test(fileContents[lineno])){
+                let imageLink = fileContents[lineno].match(regexImageLink)[0];
+                let newLink = reformatImageLink(imageLink, filePath);
+                core.info(`Found missing alt text with image link ${newLink}`);
+                const desc = await getImageText(newLink, AZURE_KEY, ENDPOINT_URL);
+                createComment(desc, imageLink, owner, repo, pull_number, commit_id, filePath, lineno);     
+            }
+        }
+    }
+};
+
+// Calls Image Analyzer API to get description of image
+async function getImageText(imageLink, AZURE_KEY, ENDPOINT_URL) {
+    try {
         const response = await axios.post(
             `${ENDPOINT_URL}computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=caption&language=en`, 
             { url: `${imageLink}`}, 
@@ -108,18 +119,44 @@ async function getImageText(imageLink) {
                 "Ocp-Apim-Subscription-Key": `${AZURE_KEY}`}
             });
         const result = JSON.stringify(response.data['captionResult']['text']);
-        core.info(result);
-        return;
+        return result; 
     } catch (error) {
         core.warning(`Failed to get caption for image with link ${imageLink}`);
         core.warning(error);
     }
-}
+};
+
+// Creates a review comment
+async function createComment(result, imageLink, owner, repo, pull_number, commit_id, path, lineno){
+    core.info(`${result}`)
+    try {
+    await octokit.rest.pulls.createReviewComment({
+        owner: `${owner}`,
+        repo: `${repo}`,
+        pull_number: `${pull_number}`,
+        body: `\`\`\`suggestion 
+            ![${result.slice(1,-1)}](${imageLink})`,
+        commit_id: `${commit_id}`,
+        path: `${path}`,
+        line: parseInt(lineno),
+        });
+    } catch (error) {
+        core.setFailed(error);
+    }
+
+};
 
 (
     async () => {
         try {
-            getMD('.', '.md')
+            var prFiles = getPrFiles(owner, repo, pull_number);
+            prFiles.then((response) => {
+                const mdFiles = getMdFiles(response.data);
+                mdFiles.then((response => {
+                    getMissingAltTxt(response);
+                }))
+                
+            })
         } catch (error) {
             core.setFailed(error.message);
         }

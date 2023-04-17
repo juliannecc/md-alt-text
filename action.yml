@@ -1,25 +1,31 @@
-name: "Alt Suggestor"
+name: "MD Alt Text Suggester"
 description: "Looks for missing inline image alt text and suggests them"
 
 inputs:
-  owner: 
-    description: "Repository Owner"
-    required: true
-  repo:
-    description: "Repository Name"
-    required: true
-  branch:
-    description: "Branch Name"
-    required: true
-  token:
-    description: "GitHub Token"
-    required: true
   ENDPOINT_URL:
     description: "Azure Endpoint Url"
     required: true
   AZURE_KEY:
     description: "Azure key"
     required: true  
+  owner: 
+    description: "Repository Owner"
+    required: true
+  repo:
+    description: "Repository Name"
+    required: true
+  token:
+    description: "GitHub Token"
+    required: true
+  pull_number:
+    description: "Pull Number"
+    required: true
+  commit_id: 
+    description: "Commit ID"
+    required: true
+  branch:
+    description: "Branch Name"
+    required: true
 
 runs: 
   using: node16
