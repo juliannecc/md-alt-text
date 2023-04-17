@@ -55,7 +55,7 @@ async function getImageLink(line){
     return line.match(regexImageLink);
 };
 
-async function reformatImageLink(imageLink){
+async function reformatImageLink(imageLink, filePath){
     if(imageLink.toString().startsWith('http')){
         return imageLink;
     } else if(imageLink.toString().startsWith('../')){
@@ -104,7 +104,7 @@ async function getMissingAltTxt(mdFiles){
         for(const lineno in fileContents){
             if(regexMissingAlt.test(fileContents[lineno])){
                 let imageLink = getImageLink(fileContents[lineno]);
-                let newLink = reformatImageLink(imageLink);
+                let newLink = reformatImageLink(imageLink, filePath);
                 core.info(`image link: ${imageLink}`);
                 core.info(`new link: ${newLink}`)
                 
