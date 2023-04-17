@@ -105,8 +105,9 @@ async function getMissingAltTxt(mdFiles){
             if(regexMissingAlt.test(fileContents[lineno])){
                 let imageLink = getImageLink(fileContents[lineno]);
                 let newLink = reformatImageLink(imageLink, filePath);
-                core.info(`image link: ${imageLink}`);
-                core.info(`new link: ${newLink}`)
+                newLink.then((response)=>{
+                    core.info(response);
+                })
                 
                 // createComment(owner, repo, pull_number, commit_id, filePath, lineno);
             }
