@@ -64,9 +64,9 @@ async function reformatImageLink(imageLink, filePath){
         var temp = /\//g;
         var newLink = '';
         if (temp.test(newPath)){
-            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}${newImageLink}`;
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${newPath}${newImageLink}`;
         } else {
-            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}${newImageLink}`;
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}${newImageLink}`;
         }
         return newLink;
     } else if(imageLink.toString().startsWith('./')){
@@ -74,19 +74,19 @@ async function reformatImageLink(imageLink, filePath){
         var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
         var newLink = '';
         if (newPath.endsWith('.md')){
-            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${cleanLink}`;
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${cleanLink}`;
         } else{
-            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}/${cleanLink}`;
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${newPath}/${cleanLink}`;
         }
         return newLink;
     } else {
-        var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${imageLink}`;
+        var newLink = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${imageLink}`;
         var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
         var newLink = '';
         if (newPath.endsWith('.md')){
-            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${imageLink}`;
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${imageLink}`;
         } else{
-            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}/${imageLink}`;
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${newPath}/${imageLink}`;
         }
         return newLink;
     }
