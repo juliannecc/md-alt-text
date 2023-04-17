@@ -51,7 +51,10 @@ async function getMdFiles(prFiles){
 async function getMissingAltTxt(mdFiles){
     for(const mdFile in mdFiles){
         for(const key in mdFiles[mdFile]){
-            core.info(key);
+            let value = mdFiles[mdFile][key];
+            if(key == 'patch'){
+                core.info(value);
+            }
         }
     }
 };
