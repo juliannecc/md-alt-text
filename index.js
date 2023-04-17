@@ -63,7 +63,7 @@ async function getMissingAltTxt(mdFiles){
                 core.warning(JSON.stringify(response.data));
 
                 mdFiles.then((response => {
-                    getMissingAltTxt(JSON.parse(response));
+                    core.info(typeof(response));
                 }))
                 
             })
