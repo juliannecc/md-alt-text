@@ -55,8 +55,12 @@ async function getMdFiles(prFiles){
             prFiles.then((response) => {
                 const mdFiles = getMdFiles(response.data);
                 core.warning(JSON.stringify(response.data));
-                core.info(mdFiles);
-                core.info(JSON.stringify(mdFiles))
+
+                mdFiles.then((response => {
+                    core.info(typeof(mdFiles));
+                    core.info(JSON.stringify(mdFiles.data))
+                }))
+                
             })
         } catch (error) {
             core.setFailed(error.message);
