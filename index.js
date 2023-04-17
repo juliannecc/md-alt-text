@@ -51,10 +51,6 @@ async function getMdFiles(prFiles){
     return mdFiles;
 };
 
-async function getImageLink(line){
-    return line.match(regexImageLink);
-};
-
 async function reformatImageLink(imageLink, filePath){
     if(imageLink.toString().startsWith('http')){
         return imageLink;
@@ -103,12 +99,11 @@ async function getMissingAltTxt(mdFiles){
         let filePath = mdFiles[mdFile]['filename'];
         for(const lineno in fileContents){
             if(regexMissingAlt.test(fileContents[lineno])){
-                let imageLink = getImageLink(fileContents[lineno]);
+                let imageLink = fileContents[lineno].match(regexImageLink)[0];
                 let newLink = reformatImageLink(imageLink, filePath);
-                newLink.then((response)=>{
+                newLink.then((response) => {
                     core.info(response);
-                })
-                
+                })                
                 // createComment(owner, repo, pull_number, commit_id, filePath, lineno);
             }
         }
