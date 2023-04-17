@@ -10,13 +10,12 @@ const repo = core.getInput('repo');
 const pull_number = core.getInput('pull_number');
 const commit_id = core.getInput('commit_id');
 const branch = core.getInput('branch');
-const lang = core.getInput('lang');
 
 const axios = require('axios');
 const octokit = github.getOctokit(token);
 
-const regexMissingAlt = /!\[\]\((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi;
-const regexImageLink = /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi;
+const regexMissingAlt = /!\[\]\((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|bmp|ico|webp|mpo)/gi;
+const regexImageLink = /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|bmp|ico|webp|mpo)/gi;
 
 // List pull requests files 
 async function getPrFiles(owner, repo, pull_number){

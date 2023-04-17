@@ -1,5 +1,5 @@
 # Markdown Alt Text Suggester
-A GitHub Action that finds missing image inline alt texts and makes a suggestion for better accesibility
+A GitHub Action that finds missing markdown image inline alt texts and makes a suggestion for better accesibility
 
 ## Usage
 Create a `.yml` file to your `.github/workflows/altsuggester.yml` and copy the following code
@@ -31,7 +31,6 @@ jobs:
       - name: Call MD Alt Text Suggester
         uses: juliannecc/md-alt-text@main
         with:
-          lang: en
           ENDPOINT_URL: ${{ secrets.ENDPOINT_URL }}
           AZURE_KEY: ${{ secrets.AZURE_KEY }}
           owner: ${{ github.repository_owner }}
@@ -41,20 +40,6 @@ jobs:
           commit_id: ${{ github.event.pull_request.head.sha }}
           branch: ${{ github.head_ref }}
 ```
-### Configuration
-#### For `lang`:
-Refer to the table below to see language supported.
-| Value  | Language            |
-|--------|---------------------|
-| en     | English             |
-| es     | Spanish             |
-| ja     | Japanese            |
-| pt     | Portuguese-Portugal |
-| zh     | Chinese Simplified  |
-
-Visit [Computer Vision Language Support](https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/language-support) for more information
-
-#### For 'ENDPOINT_URL` and `AZURE_KEY`:
+## Configuration
+#### For `ENDPOINT_URL` and `AZURE_KEY`:
 Make sure to set action secrets for `ENDPOINT_URL` and `AZURE_KEY`. To obtain the values for these, please check out [Image Analysis API](https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/how-to/call-analyze-image?tabs=rest).
-
-
