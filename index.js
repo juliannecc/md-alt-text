@@ -19,6 +19,7 @@ const axios = require('axios');
 const octokit = github.getOctokit(token);
 
 const regexMissingAlt = /!\[\]\((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi;
+const regexImageLink = /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi;
 
 // List pull requests files 
 async function getPrFiles(owner, repo, pull_number){
@@ -50,23 +51,50 @@ async function getMdFiles(prFiles){
     return mdFiles;
 };
 
-// Finds image lines with missing alt texts
-// async function getMissingAltTxt(mdFiles){
-//     for(const mdFile in mdFiles){
-//         for(const key in mdFiles[mdFile]){
-//             let value = mdFiles[mdFile][key];
-//             if(key == 'patch'){
-//                 let linesArr = value.split('\n');
-//                 for (let lineno in linesArr){
-//                     let line = linesArr[lineno];
-//                     if(regexMissingAlt.test(line)){
-//                         core.info(line.match(regexMissingAlt)[0]);
-//                     }
-//                 }
-//             }
-//         }
-//     }
-// };
+async function getImageLink(line){
+    return line.match(regexImageLink);
+};
+
+async function reformatImageLink(imageLink){
+    if(imageLink.startsWith('http')){
+        return imageLink;
+    } else if(imageLink.startsWith('../')){
+        var count = (imageLink.toString().match(/..\//g) || []).length;
+        var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
+        for (let i = 0; i < count; i++) {
+            var newPath = newPath.replace(/\/(?:.(?!\/))+$/gim, '')
+        }
+        var newImageLink = imageLink.toString().replace(imageLink, imageLink.toString().match(/\/(?:.(?!\/))+$/gim));
+        var temp = /\//g;
+        var newLink = '';
+        if (temp.test(newPath)){
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}${newImageLink}`;
+        } else {
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}${newImageLink}`;
+        }
+        return newLink;
+    } else if(imageLink.toString().startsWith('./')){
+        var cleanLink = imageLink.toString().replace('./','');
+        var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
+        var newLink = '';
+        if (newPath.endsWith('.md')){
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${cleanLink}`;
+        } else{
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}/${cleanLink}`;
+        }
+        return newLink;
+    } else {
+        var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${imageLink}`;
+        var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
+        var newLink = '';
+        if (newPath.endsWith('.md')){
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${imageLink}`;
+        } else{
+            var newLink = `https://raw.githubusercontent.com/${owner}/${repo}${branch}/${newPath}/${imageLink}`;
+        }
+        return newLink;
+    }
+}
 
 // Finds image with missing alt texts
 async function getMissingAltTxt(mdFiles){
@@ -75,7 +103,12 @@ async function getMissingAltTxt(mdFiles){
         let filePath = mdFiles[mdFile]['filename'];
         for(const lineno in fileContents){
             if(regexMissingAlt.test(fileContents[lineno])){
-                createComment(owner, repo, pull_number, commit_id, filePath, lineno);
+                let imageLink = getImageLink(fileContents[lineno]);
+                let newLink = reformatImageLink(imageLink);
+                core.info(`image link: ${imageLink}`);
+                core.info(`new link: ${newLink}`)
+                
+                // createComment(owner, repo, pull_number, commit_id, filePath, lineno);
             }
         }
     }
