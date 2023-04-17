@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Call MD Alt Text Suggester
-        uses: juliannecc/md-alt-text@main
+        uses: juliannecc/md-alt-text@v1.0.0
         with:
           ENDPOINT_URL: ${{ secrets.ENDPOINT_URL }}
           AZURE_KEY: ${{ secrets.AZURE_KEY }}
@@ -43,3 +43,6 @@ jobs:
 ## Configuration
 #### For `ENDPOINT_URL` and `AZURE_KEY`:
 Make sure to set action secrets for `ENDPOINT_URL` and `AZURE_KEY`. To obtain the values for these, please check out [Image Analysis API](https://learn.microsoft.com/en-us/azure/cognitive-services/computer-vision/how-to/call-analyze-image?tabs=rest).
+
+## Output
+![Example Output](example.png)
