@@ -148,8 +148,8 @@ async function createComment(result, imageLink, owner, repo, pull_number, commit
         owner: `${owner}`,
         repo: `${repo}`,
         pull_number: `${pull_number}`,
-        body: `\`\`\`suggestion \r\n
-            ![${result}](${imageLink}) \r\n 
+        body: `\`\`\`suggestion 
+            ![${result}](${imageLink}) 
             \`\`\` `,
         commit_id: `${commit_id}`,
         path: `${path}`,
