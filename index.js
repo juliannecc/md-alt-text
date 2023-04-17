@@ -183,10 +183,7 @@ function getRef(){
             repo: `${repo}`,
             ref: `https://api.github.com/repos/${owner}/${repo}/git/refs/heads`
           });
-        headRef.then((response) => {
-            let result = response;
-            return result; 
-        });
+        return headRef;
     } catch (error) {
         core.setFailed(`${error}`)
     }
@@ -219,7 +216,11 @@ async function createPullRequest(){
     async () => {
         try {
             getMD('.', '.md').then(() => {
-                const refName = getRef();
+                var refName = getRef();
+                var refName = refName.then((response) => {
+                        let result = response;
+                        core.warning(`${result}`);
+                    });
                 core.warning(`${refName}`);
             })
         } catch (error) {
