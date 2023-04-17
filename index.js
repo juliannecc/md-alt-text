@@ -50,7 +50,9 @@ async function getMdFiles(prFiles){
 
 async function getMissingAltTxt(mdFiles){
     for(const mdFile in mdFiles){
-        core.info(mdFile);
+        for(const key in mdFiles[mdFile]){
+            core.info(key);
+        }
     }
 };
 
