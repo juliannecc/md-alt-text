@@ -153,7 +153,7 @@ async function createComment(result, owner, repo, pull_number, commit_id, path, 
 
 function getParam(param){
     for(key in param){
-        core.info(param);
+        core.info(key);
     }
 };
 
