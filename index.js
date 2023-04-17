@@ -168,7 +168,7 @@ function getParam(param){
                     const resultsArr = getMissingAltTxt(response);
                     resultsArr.then((response) => {
                         core.info(typeof(response));
-                        core.info(response);
+                        core.info(JSON.stringify(response));
                     })
                 }))
                 
