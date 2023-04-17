@@ -151,15 +151,6 @@ async function createComment(result, owner, repo, pull_number, commit_id, path, 
 
 };
 
-function postComments(comments){
-    var result = Promise.resolve();
-    comments.forEach(function (promiseLike) {
-        result = result.then(promiseLike);
-    })
-
-    return result;
-}
-
 (
     async () => {
         try {
@@ -168,9 +159,7 @@ function postComments(comments){
                 const mdFiles = getMdFiles(response.data);
                 mdFiles.then((response => {
                     const resultsArr = getMissingAltTxt(response);
-                    resultsArr.then((response) => {
-                        core.info(response);
-                    })
+                    core.info(resultsArr);
                 }))
                 
             })
