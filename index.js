@@ -36,6 +36,11 @@ async function getPrFiles(owner, repo, pull_number){
 async function getMdFiles(prFiles){
     core.info(typeof(prFiles));
     prFiles.forEach(function(element){
+        for(const key in element){
+            if(element.hasOwnproperty(key)){
+                console.log(`${key}: ${element[key]}`);
+            }
+        }
         console.log(element)
     });
 };
