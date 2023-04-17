@@ -106,8 +106,11 @@ async function getMissingAltTxt(mdFiles){
                     core.info(`image link: ${response}`);
 
                     const desc = getImageText(response, AZURE_KEY, ENDPOINT_URL);
+                    desc.info((result) => {
+                        createComment(result, owner, repo, pull_number, commit_id, filePath, lineno);
+                    })
+
                 })                
-                // createComment(owner, repo, pull_number, commit_id, filePath, lineno);
             }
         }
     }
@@ -123,7 +126,6 @@ async function getImageText(imageLink, AZURE_KEY, ENDPOINT_URL) {
                 "Ocp-Apim-Subscription-Key": `${AZURE_KEY}`}
             });
         const result = JSON.stringify(response.data['captionResult']['text']);
-        core.info(result);
         return result; 
     } catch (error) {
         core.warning(`Failed to get caption for image with link ${imageLink}`);
@@ -131,15 +133,14 @@ async function getImageText(imageLink, AZURE_KEY, ENDPOINT_URL) {
     }
 };
 
-
 // Creates a review comment
-async function createComment(owner, repo, pull_number, commit_id, path, lineno){
+async function createComment(result, owner, repo, pull_number, commit_id, path, lineno){
     try {
     await octokit.rest.pulls.createReviewComment({
         owner: `${owner}`,
         repo: `${repo}`,
         pull_number: `${pull_number}`,
-        body: 'Nice',
+        body: `\`\`\`suggestion ${result}\`\`\``,
         commit_id: `${commit_id}`,
         path: `${path}`,
         line: parseInt(lineno),
@@ -160,7 +161,6 @@ async function createComment(owner, repo, pull_number, commit_id, path, lineno){
 
                 mdFiles.then((response => {
                     getMissingAltTxt(response);
-                    core.info(typeof(response));
                 }))
                 
             })
