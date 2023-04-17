@@ -140,7 +140,7 @@ async function createComment(result, imageLink, owner, repo, pull_number, commit
         line: parseInt(lineno),
         });
     } catch (error) {
-        core.info("Unable to create comment")
+        core.info(`Unable to create comment for ${imageLink}`)
         core.info(error);
     }
 };
