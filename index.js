@@ -105,7 +105,7 @@ async function getMissingAltTxt(mdFiles){
                 newLink.then((response) => {
                     core.info(`image link: ${response}`);
 
-                    const desc = getImageText(response);
+                    const desc = getImageText(response, AZURE_KEY, ENDPOINT_URL);
                 })                
                 // createComment(owner, repo, pull_number, commit_id, filePath, lineno);
             }
