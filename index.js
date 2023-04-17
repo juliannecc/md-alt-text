@@ -95,6 +95,7 @@ function reformatImageLink(imageLink, filePath){
 
 // Finds image with missing alt texts
 async function getMissingAltTxt(mdFiles){
+    const resultsArr = [];
     for(const mdFile in mdFiles){
         let fileContents = mdFiles[mdFile]['patch'].split('\n');
         let filePath = mdFiles[mdFile]['filename'];
@@ -105,8 +106,9 @@ async function getMissingAltTxt(mdFiles){
                 core.info(`Found missing alt text with image link ${newLink}`);
                 const desc = getImageText(newLink, AZURE_KEY, ENDPOINT_URL);
                 desc.then((response) => {
+                    resultsArr.push({"response":response, "filePath": filePath, "lineno": lineno});
                     // core.info(response);
-                    createComment(response, owner, repo, pull_number, commit_id, filePath, lineno);
+                    // const comment = createComment(response, owner, repo, pull_number, commit_id, filePath, lineno);
                 })          
             }
         }
@@ -131,10 +133,10 @@ async function getImageText(imageLink, AZURE_KEY, ENDPOINT_URL) {
 };
 
 // Creates a review comment
-function createComment(result, owner, repo, pull_number, commit_id, path, lineno){
+async function createComment(result, owner, repo, pull_number, commit_id, path, lineno){
     core.info(`${result}`)
     try {
-    octokit.rest.pulls.createReviewComment({
+    await octokit.rest.pulls.createReviewComment({
         owner: `${owner}`,
         repo: `${repo}`,
         pull_number: `${pull_number}`,
@@ -149,6 +151,15 @@ function createComment(result, owner, repo, pull_number, commit_id, path, lineno
 
 };
 
+function postComments(comments){
+    var result = Promise.resolve();
+    comments.forEach(function (promiseLike) {
+        result = result.then(promiseLike);
+    })
+
+    return result;
+}
+
 (
     async () => {
         try {
@@ -156,7 +167,10 @@ function createComment(result, owner, repo, pull_number, commit_id, path, lineno
             prFiles.then((response) => {
                 const mdFiles = getMdFiles(response.data);
                 mdFiles.then((response => {
-                    getMissingAltTxt(response);
+                    const resultsArr = getMissingAltTxt(response);
+                    resultsArr.then((response) => {
+                        core.info(response);
+                    })
                 }))
                 
             })
