@@ -37,9 +37,9 @@ async function getPrFiles(owner, repo, pull_number){
         try {
             var prFiles = getPrFiles(owner, repo, pull_number);
             var prFiles = prFiles.then((response) => {
-                var prFiles = JSON.stringify(response.data);
+                prFiles = JSON.stringify(response.data);
+                core.warning(prFiles);
             })
-            core.warning(prFiles);
         } catch (error) {
             core.setFailed(error.message);
         }
