@@ -34,6 +34,7 @@ async function getPrFiles(owner, repo, pull_number){
 
 // Gets md files from pull request files
 async function getMdFiles(prFiles){
+    core.info(typeof(prFiles));
     for(element in prFiles){
         core.info(element);
     }
@@ -44,7 +45,7 @@ async function getMdFiles(prFiles){
         try {
             var prFiles = getPrFiles(owner, repo, pull_number);
             prFiles.then((response) => {
-                getMdFiles(prFiles);
+                getMdFiles(response.data);
                 core.warning(JSON.stringify(response.data));
             })
         } catch (error) {
