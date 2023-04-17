@@ -166,7 +166,9 @@ function getParam(param){
                 const mdFiles = getMdFiles(response.data);
                 mdFiles.then((response => {
                     const resultsArr = getMissingAltTxt(response);
-                    core.info(resultsArr);
+                    resultsArr.then((response) => {
+                        getParam(response);
+                    })
                 }))
                 
             })
