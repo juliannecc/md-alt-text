@@ -21,6 +21,8 @@ const octokit = github.getOctokit(token);
 const regexMissingAlt = /!\[\]\((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi;
 const regexImageLink = /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi;
 
+const resultsArr = [];
+
 // List pull requests files 
 async function getPrFiles(owner, repo, pull_number){
     try {
@@ -95,7 +97,6 @@ function reformatImageLink(imageLink, filePath){
 
 // Finds image with missing alt texts
 async function getMissingAltTxt(mdFiles){
-    const resultsArr = [];
     for(const mdFile in mdFiles){
         let fileContents = mdFiles[mdFile]['patch'].split('\n');
         let filePath = mdFiles[mdFile]['filename'];
