@@ -34,15 +34,18 @@ async function getPrFiles(owner, repo, pull_number){
 
 // Gets md files from pull request files
 async function getMdFiles(prFiles){
-    core.info(typeof(prFiles));
+    const mdFiles = [];
+
     prFiles.forEach(function(prFile){
         for (let key in prFile){
             let value = prFile[key];
             if(/.*\.md$/.test(value)){
-                core.info(`${key}: ${prFile[key]}`)
+                mdFiles.push(prFile);
             }
         }
     });
+
+    return mdFiles;
 };
 
 (
@@ -50,8 +53,10 @@ async function getMdFiles(prFiles){
         try {
             var prFiles = getPrFiles(owner, repo, pull_number);
             prFiles.then((response) => {
-                getMdFiles(response.data);
+                const mdFiles = getMdFiles(response.data);
                 core.warning(JSON.stringify(response.data));
+                core.info(mdFiles);
+                core.info(JSON.stringify(mdFiles))
             })
         } catch (error) {
             core.setFailed(error.message);
