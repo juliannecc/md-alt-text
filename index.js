@@ -151,6 +151,12 @@ async function createComment(result, owner, repo, pull_number, commit_id, path, 
 
 };
 
+function getParam(param){
+    for(key in param){
+        core.info(param);
+    }
+};
+
 (
     async () => {
         try {
@@ -159,7 +165,9 @@ async function createComment(result, owner, repo, pull_number, commit_id, path, 
                 const mdFiles = getMdFiles(response.data);
                 mdFiles.then((response => {
                     const resultsArr = getMissingAltTxt(response);
-                    core.info(resultsArr);
+                    resultsArr.then((response) => {
+                        getParam(response);
+                    })
                 }))
                 
             })
