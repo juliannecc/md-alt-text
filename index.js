@@ -140,7 +140,8 @@ async function createComment(result, imageLink, owner, repo, pull_number, commit
         line: parseInt(lineno),
         });
     } catch (error) {
-        core.setFailed(error);
+        core.info("Unable to create comment")
+        core.info(error);
     }
 };
 
@@ -152,7 +153,7 @@ async function createComment(result, imageLink, owner, repo, pull_number, commit
                 const mdFiles = getMdFiles(response.data);
                 mdFiles.then((response => {
                     getMissingAltTxt(response);
-                }))
+                }))  
             })
         } catch (error) {
             core.setFailed(error.message);
