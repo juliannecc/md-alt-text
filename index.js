@@ -102,12 +102,13 @@ async function getMissingAltTxt(mdFiles){
         let fileContents = mdFiles[mdFile]['patch'].split('\n');
         let filePath = mdFiles[mdFile]['filename'];
         for(const lineno in fileContents){
+            core.info(fileContents[lineno]);
             if(regexMissingAlt.test(fileContents[lineno])){
                 let imageLink = fileContents[lineno].match(regexImageLink)[0];
                 let newLink = reformatImageLink(imageLink, filePath);
                 core.info(`Found missing alt text with image link ${newLink}`);
                 const desc = await getImageText(newLink, AZURE_KEY, ENDPOINT_URL);
-                createComment(desc, owner, repo, pull_number, commit_id, filePath, lineno);
+                createComment(desc, imageLink, owner, repo, pull_number, commit_id, filePath, lineno);
                 // desc.then((response) => {
                 //     var tempArr = [];
                 //     core.info(`${response}, ${filePath}, ${lineno}`);
@@ -140,14 +141,14 @@ async function getImageText(imageLink, AZURE_KEY, ENDPOINT_URL) {
 };
 
 // Creates a review comment
-async function createComment(result, owner, repo, pull_number, commit_id, path, lineno){
+async function createComment(result, imageLink, owner, repo, pull_number, commit_id, path, lineno){
     core.info(`${result}`)
     try {
     await octokit.rest.pulls.createReviewComment({
         owner: `${owner}`,
         repo: `${repo}`,
         pull_number: `${pull_number}`,
-        body: 'nice',
+        body: `\`\`\`suggestion ![${result}](${imageLink}) \`\`\` `,
         commit_id: `${commit_id}`,
         path: `${path}`,
         line: parseInt(lineno),
@@ -156,12 +157,6 @@ async function createComment(result, owner, repo, pull_number, commit_id, path, 
         core.setFailed(error);
     }
 
-};
-
-function getParam(param){
-    for(key in param){
-        core.info(param[key]);
-    }
 };
 
 (
