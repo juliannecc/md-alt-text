@@ -35,7 +35,10 @@ async function getPrFiles(owner, repo, pull_number){
 (
     async () => {
         try {
-            getPrFiles(owner, repo, pull_number);
+            const prFiles = getPrFiles(owner, repo, pull_number);
+            prFiles.then((response) => {
+                core.info(response);
+            })
         } catch (error) {
             core.setFailed(error.message);
         }
