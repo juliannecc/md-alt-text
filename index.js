@@ -34,11 +34,10 @@ async function getPrFiles(owner, repo, pull_number){
 
 // Gets md files from pull request files
 async function getMdFiles(prFiles){
-    for (var key in prFiles) {
-        if (prFiles.hasOwnProperty(key)) {
-            core.info(key + " -> " + p[key]);
-        }
-    }
+    for (var i = 0; i < prFiles.length; i++) {
+        var value = data[key];
+        core.info(value);
+     }
 };
 
 (
