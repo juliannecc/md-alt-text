@@ -18,6 +18,8 @@ const branch = core.getInput('branch');
 const axios = require('axios');
 const octokit = github.getOctokit(token);
 
+const regexMissingAlt = /!\[\]\((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi;
+
 // List pull requests files 
 async function getPrFiles(owner, repo, pull_number){
     try {
@@ -56,7 +58,9 @@ async function getMissingAltTxt(mdFiles){
                 let linesArr = value.split('\n');
                 for (let lineno in linesArr){
                     let line = linesArr[lineno];
-                    core.info(line);
+                    if(regexMissingAlt.test(line)){
+                        core.info(line.match(regexMissingAlt)[0]);
+                    }
                 }
                 // core.info(value.match(/!\[\]\((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi));
             }
