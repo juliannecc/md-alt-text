@@ -101,7 +101,7 @@ async function getMissingAltTxt(mdFiles){
                 let imageLink = fileContents[lineno].match(regexImageLink)[0];
                 let newLink = reformatImageLink(imageLink, filePath);
                 core.info(`Found missing alt text with image link ${newLink}`);
-                const desc = await getImageText(newLink, AZURE_KEY, ENDPOINT_URL);
+                const desc = await getImageText(newLink, AZURE_KEY, ENDPOINT_URL, lang);
                 createComment(desc, imageLink, owner, repo, pull_number, commit_id, filePath, lineno);     
             }
         }
@@ -111,9 +111,7 @@ async function getMissingAltTxt(mdFiles){
 // Calls Image Analyzer API to get description of image
 async function getImageText(imageLink, AZURE_KEY, ENDPOINT_URL, lang) {
     try {
-        const eUrl = `${ENDPOINT_URL}computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=caption&language=${lang}`;
-        core.info(eUrl);
-        const response = await axios.post( eUrl, 
+        const response = await axios.post( `${ENDPOINT_URL}computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=caption&language=${lang}`, 
             { url: `${imageLink}`}, 
             { headers:
                 {"Content-Type": "application/json",
