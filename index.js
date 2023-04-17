@@ -112,7 +112,7 @@ async function getMissingAltTxt(mdFiles){
 async function getImageText(imageLink, AZURE_KEY, ENDPOINT_URL, lang) {
     try {
         const response = await axios.post(
-            `${ENDPOINT_URL}computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=caption&language=${lang}`, 
+            `${ENDPOINT_URL}computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=caption&language=${lang.toString()}`, 
             { url: `${imageLink}`}, 
             { headers:
                 {"Content-Type": "application/json",
