@@ -15,19 +15,23 @@ const axios = require('axios');
 const octokit = github.getOctokit(token);
 
 // List pull requests files 
-async function getPrFiles(){
-    var prFiles = await octokit.rest.pulls.listFiles({
-        owner: `${owner}`,
-        repo: `${repo}`,
-        pull_number: `${pull_number}`,
-      });
-      return prFiles;
+async function getPrFiles(owner, repo, pull_number){
+    try {
+        const prFiles = await octokit.rest.pulls.listFiles({
+            owner: `${owner}`,
+            repo: `${repo}`,
+            pull_number: `${pull_number}`,
+          });
+          return prFiles;
+    } catch (error) {
+        core.setFailed(error)
+    }
 };
 
 (
     async () => {
         try {
-            getPrFiles();
+            getPrFiles(owner, repo, pull_number);
         } catch (error) {
             core.setFailed(error.message);
         }
