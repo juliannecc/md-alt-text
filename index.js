@@ -51,6 +51,7 @@ async function getMdFiles(prFiles){
     return mdFiles;
 };
 
+// Reformats the image link
 async function reformatImageLink(imageLink, filePath){
     if(imageLink.toString().startsWith('http')){
         return imageLink;
@@ -102,7 +103,13 @@ async function getMissingAltTxt(mdFiles){
                 let imageLink = fileContents[lineno].match(regexImageLink)[0];
                 let newLink = reformatImageLink(imageLink, filePath);
                 newLink.then((response) => {
-                    core.info(response);
+                    core.info(`image link: ${response}`);
+
+                    const desc = getImageText(response);
+                    desc.then((result) => {
+                        core.info(result);
+                    })
+
                 })                
                 // createComment(owner, repo, pull_number, commit_id, filePath, lineno);
             }
@@ -110,6 +117,25 @@ async function getMissingAltTxt(mdFiles){
     }
 };
 
+async function getImageText(imageLink, AZURE_KEY, ENDPOINT_URL) {
+    try {
+        const response = await axios.post(
+            `${ENDPOINT_URL}computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=caption&language=en`, 
+            { url: `${imageLink}`}, 
+            { headers:
+                {"Content-Type": "application/json",
+                "Ocp-Apim-Subscription-Key": `${AZURE_KEY}`}
+            });
+        const result = JSON.stringify(response.data['captionResult']['text']);
+        return result; 
+    } catch (error) {
+        core.warning(`Failed to get caption for image with link ${imageLink}`);
+        core.warning(error);
+    }
+};
+
+
+// Creates a review comment
 async function createComment(owner, repo, pull_number, commit_id, path, lineno){
     try {
     await octokit.rest.pulls.createReviewComment({
