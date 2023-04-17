@@ -39,7 +39,7 @@ async function getMdFiles(prFiles){
     prFiles.forEach(function(prFile){
         for (let key in prFile){
             let value = prFile[key];
-            if(/.*\.md$/i.test(value)){
+            if( key == 'filename' && /.*\.md$/i.test(value)){
                 mdFiles.push(prFile);
             }
         }
