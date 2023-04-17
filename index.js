@@ -32,14 +32,23 @@ async function getPrFiles(owner, repo, pull_number){
     }
 };
 
+// Gets md files from pull request files
+async function getMdFiles(prFiles){
+    for (var key in prFiles) {
+        if (prFiles.hasOwnProperty(key)) {
+            core.info(key + " -> " + p[key]);
+        }
+    }
+};
+
 (
     async () => {
         try {
             var prFiles = getPrFiles(owner, repo, pull_number);
             prFiles.then((response) => {
-                prFiles = JSON.stringify(response.data);
+                getMdFiles(prFiles);
+                core.warning(JSON.stringify(response.data));
             })
-            core.warning(prFiles);
         } catch (error) {
             core.setFailed(error.message);
         }
