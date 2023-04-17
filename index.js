@@ -39,13 +39,19 @@ async function getMdFiles(prFiles){
     prFiles.forEach(function(prFile){
         for (let key in prFile){
             let value = prFile[key];
-            if(/.*\.md$/.test(value)){
+            if(/.*\.md$/i.test(value)){
                 mdFiles.push(prFile);
             }
         }
     });
 
     return mdFiles;
+};
+
+async function getMissingAltTxt(mdFiles){
+    mdFiles.forEach(function(mdFile){
+        core.info(mdFile);
+    })
 };
 
 (
@@ -57,8 +63,7 @@ async function getMdFiles(prFiles){
                 core.warning(JSON.stringify(response.data));
 
                 mdFiles.then((response => {
-                    core.info(typeof(response));
-                    core.info(JSON.stringify(response.data))
+                    getMissingAltTxt(response);
                 }))
                 
             })
