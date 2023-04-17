@@ -53,7 +53,12 @@ async function getMissingAltTxt(mdFiles){
         for(const key in mdFiles[mdFile]){
             let value = mdFiles[mdFile][key];
             if(key == 'patch'){
-                core.info(value.match(/(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi));
+                let linesArr = value.split('\n');
+                for (let lineno in linesArr){
+                    let line = linesArr[lineno];
+                    core.info(line);
+                }
+                // core.info(value.match(/!\[\]\((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi));
             }
         }
     }
