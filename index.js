@@ -177,13 +177,18 @@ function modifyFiles(result, lineno, filePath, imageLink){
 };
 
 function getRef(){
-    const headRef = octokit.rest.git.getRef({
-        owner: `${owner}`,
-        repo: `${repo}`,
-        ref: `https://api.github.com/repos/${owner}/${repo}/git/refs/heads`
-      });
-    core.info(JSON.stringify(headRef.data))
-    return JSON.stringify(headRef.data)
+    try {
+        const headRef = octokit.rest.git.getRef({
+            owner: `${owner}`,
+            repo: `${repo}`,
+            ref: `https://api.github.com/repos/${owner}/${repo}/git/refs/heads`
+          });
+        core.info(JSON.stringify(headRef))
+        return JSON.stringify(headRef)
+    } catch (error) {
+        core.setFailed(`${error}`)
+    }
+
 };
 
 async function createRef(){
