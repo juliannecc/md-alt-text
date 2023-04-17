@@ -72,12 +72,25 @@ async function getMdFiles(prFiles){
 async function getMissingAltTxt(mdFiles){
     for(const mdFile in mdFiles){
         let fileContents = mdFiles[mdFile]['patch'].split('\n');
-        core.info(fileContents);
+        let filePath = mdFiles[mdFile]['filename'];
+        for(const lineno in fileContents){
+            if(regexMissingAlt.test(fileContents[lineno])){
+                createComment(owner, repo, pull_number, commit_id, filePath, lineno);
+            }
+        }
     }
 };
 
-async function createComment(){
-
+async function createComment(owner, repo, pull_number, commit_id, path, line){
+    await octokit.rest.pulls.createReviewComment({
+        owner: `${owner}`,
+        repo: `${repo}`,
+        pull_number: `${pull_number}`,
+        body: `Nice`,
+        commit_id: `${commit_id}`,
+        path: `${path}`,
+        line: `${lineno}`,
+        });
 };
 
 (
