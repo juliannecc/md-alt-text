@@ -21,9 +21,7 @@ async function getPrFiles(){
         repo: `${repo}`,
         pull_number: `${pull_number}`,
       });
-    prFiles.then((response) => {
-        core.info(response);
-    })       
+      return prFiles;
 };
 
 (
