@@ -36,7 +36,7 @@ async function getPrFiles(owner, repo, pull_number){
 async function getMdFiles(prFiles){
     for (const key in prFiles) {
         if (prFiles.hasOwnProperty(key)) {
-          console.log(`${key}: ${prFiles[key]}`);
+          core.info(`${key}: ${prFiles[key]}`);
         }
       }
 };
