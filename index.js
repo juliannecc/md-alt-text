@@ -1,10 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-const fs = require('fs');
-const readline = require('readline');
-var path = require('path');
-
 const AZURE_KEY = core.getInput('AZURE_KEY');
 const ENDPOINT_URL = core.getInput('ENDPOINT_URL');
 
@@ -20,8 +16,6 @@ const octokit = github.getOctokit(token);
 
 const regexMissingAlt = /!\[\]\((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi;
 const regexImageLink = /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=/]*\.(gif|jpg|jpeg|tiff|png|svg|ico)/gi;
-
-const resultsArr = [];
 
 // List pull requests files 
 async function getPrFiles(owner, repo, pull_number){
@@ -108,21 +102,13 @@ async function getMissingAltTxt(mdFiles){
                 let newLink = reformatImageLink(imageLink, filePath);
                 core.info(`Found missing alt text with image link ${newLink}`);
                 const desc = await getImageText(newLink, AZURE_KEY, ENDPOINT_URL);
-                createComment(desc, imageLink, owner, repo, pull_number, commit_id, filePath, lineno);
-                // desc.then((response) => {
-                //     var tempArr = [];
-                //     core.info(`${response}, ${filePath}, ${lineno}`);
-                //     tempArr.push([response,filePath,lineno]);
-                //     core.info(`tempArr: ${tempArr}`)
-                //     resultsArr.push(tempArr);
-                //     // core.info(response);
-                //     // const comment = createComment(response, owner, repo, pull_number, commit_id, filePath, lineno);
-                // })          
+                createComment(desc, imageLink, owner, repo, pull_number, commit_id, filePath, lineno);     
             }
         }
     }
 };
 
+// Calls Image Analyzer API to get description of image
 async function getImageText(imageLink, AZURE_KEY, ENDPOINT_URL) {
     try {
         const response = await axios.post(
