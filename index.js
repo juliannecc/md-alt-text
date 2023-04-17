@@ -56,9 +56,9 @@ async function getImageLink(line){
 };
 
 async function reformatImageLink(imageLink){
-    if(imageLink.startsWith('http')){
+    if(imageLink.toString().startsWith('http')){
         return imageLink;
-    } else if(imageLink.startsWith('../')){
+    } else if(imageLink.toString().startsWith('../')){
         var count = (imageLink.toString().match(/..\//g) || []).length;
         var newPath = filePath.replace(/\/(?:.(?!\/))+$/gim, '');
         for (let i = 0; i < count; i++) {
