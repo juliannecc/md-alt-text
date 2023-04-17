@@ -81,7 +81,8 @@ async function getMissingAltTxt(mdFiles){
     }
 };
 
-async function createComment(owner, repo, pull_number, commit_id, path, line){
+async function createComment(owner, repo, pull_number, commit_id, path, lineno){
+    try {
     await octokit.rest.pulls.createReviewComment({
         owner: `${owner}`,
         repo: `${repo}`,
@@ -89,8 +90,12 @@ async function createComment(owner, repo, pull_number, commit_id, path, line){
         body: `Nice`,
         commit_id: `${commit_id}`,
         path: `${path}`,
-        line: `${line}`,
+        line: lineno,
         });
+    } catch (error) {
+        core.setFailed(error);
+    }
+
 };
 
 (
