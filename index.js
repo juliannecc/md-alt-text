@@ -5,11 +5,15 @@ const fs = require('fs');
 const readline = require('readline');
 var path = require('path');
 
+const AZURE_KEY = core.getInput('AZURE_KEY');
+const ENDPOINT_URL = core.getInput('ENDPOINT_URL');
+
 const token = core.getInput('token');
 const owner = core.getInput('owner');
 const repo = core.getInput('repo');
 const pull_number = core.getInput('pull_number');
 const commit_id = core.getInput('commit_id');
+const branch = core.getInput('branch');
 
 const axios = require('axios');
 const octokit = github.getOctokit(token);
