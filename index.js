@@ -108,8 +108,11 @@ async function getMissingAltTxt(mdFiles){
                 core.info(`Found missing alt text with image link ${newLink}`);
                 const desc = getImageText(newLink, AZURE_KEY, ENDPOINT_URL);
                 desc.then((response) => {
+                    var tempArr = [];
                     core.info(`${response}, ${filePath}, ${lineno}`);
-                    resultsArr.push([response,filePath,lineno]);
+                    tempArr.push([response,filePath,lineno]);
+                    core.info(`tempArr: ${tempArr}`)
+                    resultsArr.push(tempArr);
                     // core.info(response);
                     // const comment = createComment(response, owner, repo, pull_number, commit_id, filePath, lineno);
                 })          
@@ -169,6 +172,7 @@ function getParam(param){
                 mdFiles.then((response => {
                     getMissingAltTxt(response);
                 }))
+            core.info(resultsArr);
                 
             })
         } catch (error) {
