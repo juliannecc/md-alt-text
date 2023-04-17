@@ -113,6 +113,7 @@ async function getMissingAltTxt(mdFiles){
             }
         }
     }
+    return resultsArr;
 };
 
 async function getImageText(imageLink, AZURE_KEY, ENDPOINT_URL) {
@@ -165,7 +166,7 @@ function getParam(param){
                 const mdFiles = getMdFiles(response.data);
                 mdFiles.then((response => {
                     const resultsArr = getMissingAltTxt(response);
-                    getParam(resultsArr);
+                    core.info(resultsArr);
                 }))
                 
             })
