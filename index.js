@@ -87,10 +87,10 @@ async function createComment(owner, repo, pull_number, commit_id, path, lineno){
         owner: `${owner}`,
         repo: `${repo}`,
         pull_number: `${pull_number}`,
-        body: `Nice`,
+        body: 'Nice',
         commit_id: `${commit_id}`,
         path: `${path}`,
-        line: lineno,
+        line: parseInt(lineno),
         });
     } catch (error) {
         core.setFailed(error);
