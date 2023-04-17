@@ -10,6 +10,7 @@ const repo = core.getInput('repo');
 const pull_number = core.getInput('pull_number');
 const commit_id = core.getInput('commit_id');
 const branch = core.getInput('branch');
+const lang = core.getInput('lang');
 
 const axios = require('axios');
 const octokit = github.getOctokit(token);
@@ -108,10 +109,10 @@ async function getMissingAltTxt(mdFiles){
 };
 
 // Calls Image Analyzer API to get description of image
-async function getImageText(imageLink, AZURE_KEY, ENDPOINT_URL) {
+async function getImageText(imageLink, AZURE_KEY, ENDPOINT_URL, lang) {
     try {
         const response = await axios.post(
-            `${ENDPOINT_URL}computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=caption&language=en`, 
+            `${ENDPOINT_URL}computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=caption&language=${lang}`, 
             { url: `${imageLink}`}, 
             { headers:
                 {"Content-Type": "application/json",

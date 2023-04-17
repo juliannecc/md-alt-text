@@ -2,6 +2,9 @@ name: "MD Alt Text Suggester"
 description: "Looks for missing inline image alt text and suggests them"
 
 inputs:
+  lang:
+    description: "language"
+    required: true
   ENDPOINT_URL:
     description: "Azure Endpoint Url"
     required: true
