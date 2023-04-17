@@ -103,7 +103,7 @@ async function getMissingAltTxt(mdFiles){
                 let imageLink = fileContents[lineno].match(regexImageLink)[0];
                 let newLink = reformatImageLink(imageLink, filePath);
                 newLink.then((response) => {
-                    core.info(`image link: ${response}`);
+                    core.info(`Found image link: ${response}`);
 
                     const desc = getImageText(response, AZURE_KEY, ENDPOINT_URL);
                     desc.info((result) => {
@@ -157,8 +157,6 @@ async function createComment(result, owner, repo, pull_number, commit_id, path, 
             var prFiles = getPrFiles(owner, repo, pull_number);
             prFiles.then((response) => {
                 const mdFiles = getMdFiles(response.data);
-                core.warning(JSON.stringify(response.data));
-
                 mdFiles.then((response => {
                     getMissingAltTxt(response);
                 }))
