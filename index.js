@@ -52,7 +52,7 @@ async function getMdFiles(prFiles){
 };
 
 // Reformats the image link
-async function reformatImageLink(imageLink, filePath){
+function reformatImageLink(imageLink, filePath){
     if(imageLink.toString().startsWith('http')){
         return imageLink;
     } else if(imageLink.toString().startsWith('../')){
@@ -102,14 +102,8 @@ async function getMissingAltTxt(mdFiles){
             if(regexMissingAlt.test(fileContents[lineno])){
                 let imageLink = fileContents[lineno].match(regexImageLink)[0];
                 let newLink = reformatImageLink(imageLink, filePath);
+                core.info(newLink);
                 const desc = getImageText(newLink, AZURE_KEY, ENDPOINT_URL);
-
-                const allPromise = Promise.all([newLink, desc]);
-                allPromise.then(values => {
-                    core.info(values);
-                  }).catch(error => {
-                    core.info(error);
-                  });
 
                 // createComment(desc, owner, repo, pull_number, commit_id, filePath, lineno);          
             }
