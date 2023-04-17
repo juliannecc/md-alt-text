@@ -49,9 +49,9 @@ async function getMdFiles(prFiles){
 };
 
 async function getMissingAltTxt(mdFiles){
-    mdFiles.forEach(function(mdFile){
+    for(const mdFile in mdFiles){
         core.info(mdFile);
-    })
+    }
 };
 
 (
@@ -63,6 +63,7 @@ async function getMissingAltTxt(mdFiles){
                 core.warning(JSON.stringify(response.data));
 
                 mdFiles.then((response => {
+                    getMissingAltTxt(response);
                     core.info(typeof(response));
                 }))
                 
