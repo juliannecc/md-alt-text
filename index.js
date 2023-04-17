@@ -91,12 +91,11 @@ function reformatImageLink(imageLink, filePath){
 
 // Finds image with missing alt texts
 async function getMissingAltTxt(mdFiles){
-    core.info('getting missing alt texts');
+    core.info('Getting missing alt texts');
     for(const mdFile in mdFiles){
         let fileContents = mdFiles[mdFile]['patch'].split('\n');
         let filePath = mdFiles[mdFile]['filename'];
         for(const lineno in fileContents){
-            core.info(fileContents[lineno]);
             if(regexMissingAlt.test(fileContents[lineno])){
                 let imageLink = fileContents[lineno].match(regexImageLink)[0];
                 let newLink = reformatImageLink(imageLink, filePath);
@@ -143,7 +142,6 @@ async function createComment(result, imageLink, owner, repo, pull_number, commit
     } catch (error) {
         core.setFailed(error);
     }
-
 };
 
 (
@@ -155,7 +153,6 @@ async function createComment(result, imageLink, owner, repo, pull_number, commit
                 mdFiles.then((response => {
                     getMissingAltTxt(response);
                 }))
-                
             })
         } catch (error) {
             core.setFailed(error.message);
