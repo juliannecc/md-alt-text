@@ -132,12 +132,13 @@ async function getImageText(imageLink, AZURE_KEY, ENDPOINT_URL) {
 
 // Creates a review comment
 async function createComment(result, owner, repo, pull_number, commit_id, path, lineno){
+    core.info(`${result}`)
     try {
     await octokit.rest.pulls.createReviewComment({
         owner: `${owner}`,
         repo: `${repo}`,
         pull_number: `${pull_number}`,
-        body: `${result}`,
+        body: 'nice',
         commit_id: `${commit_id}`,
         path: `${path}`,
         line: parseInt(lineno),
