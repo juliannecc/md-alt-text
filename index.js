@@ -54,12 +54,12 @@ async function getMissingAlt(filePath){
             desc.then((response) => {
                 let result = response;
                 core.info(result);
-                // modifyFiles(result, lineno, filePath, imageLink);
+                modifyFiles(result, lineno, filePath, imageLink);
               });
         }
     });
     rl.on('close', () => {
-        core.info('Finished reading the file.');
+        // core.info('Done reading file.');
     });
 };
 
