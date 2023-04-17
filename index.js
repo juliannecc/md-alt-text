@@ -13,6 +13,7 @@ const commit_id = core.getInput('commit_id');
 
 const axios = require('axios');
 const octokit = github.getOctokit(token);
+var crypto = require('crypto')
 
 // Finds MD files within a repository
 // https://stackoverflow.com/questions/25460574/find-files-by-extension-html-under-a-folder-in-nodejs
@@ -175,12 +176,30 @@ function modifyFiles(result, lineno, filePath, imageLink){
     //   });
 };
 
+function getRef(){
+    const headRef = octokit.rest.git.getRef({
+        owner: `${owner}`,
+        repo: `${repo}`,
+        ref: `https://api.github.com/repos/${owner}/${repo}/git/refs/heads`
+      });
+    core.info(JSON.stringify(headRef.data['object']['sha']))
+    return JSON.stringify(headRef.data['object']['sha'])
+};
+
+async function createRef(){
+  await octokit.rest.git.createRef({
+    owner: `${owner}`,
+    repo: `${repo}`,
+    ref: `refs/heads/feature/md-suggest-${Math.random()}`,
+    sha,
+  });  
+};
 async function createPullRequest(){
     try {
         await octokit.rest.pulls.create({
             owner: `${owner}`,
             repo: `${repo}`,
-            head: `${owner}:feature/md-suggest-${pull_number}`,
+            head: `feature/md-suggest-${pull_number}`,
             base: 'main',
           }); 
     } catch (error) {
@@ -193,7 +212,8 @@ async function createPullRequest(){
     async () => {
         try {
             getMD('.', '.md').then(() => {
-                createPullRequest();
+                const refName = getRef();
+                core.warning(`${refName}`);
             })
         } catch (error) {
             core.setFailed(error.message);
