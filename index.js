@@ -34,9 +34,7 @@ async function getPrFiles(owner, repo, pull_number){
 
 // Gets md files from pull request files
 async function getMdFiles(prFiles){
-    prFiles.forEach(element => {
-        core.info(element)
-    });
+    typeof(prFiles);
 };
 
 (
