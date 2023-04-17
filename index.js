@@ -183,8 +183,10 @@ function getRef(){
             repo: `${repo}`,
             ref: `https://api.github.com/repos/${owner}/${repo}/git/refs/heads`
           });
-        core.info(headRef)
-        return JSON.stringify(headRef)
+        headRef.then((response) => {
+            let result = response;
+            return result; 
+        });
     } catch (error) {
         core.setFailed(`${error}`)
     }
