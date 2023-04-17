@@ -37,7 +37,10 @@ async function getMdFiles(prFiles){
     core.info(typeof(prFiles));
     prFiles.forEach(function(prFile){
         for (let key in prFile){
-            core.info(`${key}: ${prFile[key]}`)
+            let value = prFile[key];
+            if(/.*\.md$/.test(value)){
+                core.info(`${key}: ${prFile[key]}`)
+            }
         }
     });
 };
