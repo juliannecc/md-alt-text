@@ -89,7 +89,7 @@ async function createComment(owner, repo, pull_number, commit_id, path, line){
         body: `Nice`,
         commit_id: `${commit_id}`,
         path: `${path}`,
-        line: `${lineno}`,
+        line: `${line}`,
         });
 };
 
